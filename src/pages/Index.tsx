@@ -1,38 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
-import { sections, FOUNDATION_IMG } from "@/components/sections";
-import Calculator from "@/components/Calculator";
-import SidebarBlock from "@/components/SidebarBlock";
-import HeroSection from "@/components/HeroSection";
+import { sections, HERO_IMG } from "@/components/sections";
 
 export default function Index() {
-  const [activeSection, setActiveSection] = useState("foundation");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.25, rootMargin: "-80px 0px -50% 0px" }
-    );
-    sections.forEach((s) => {
-      const el = sectionRefs.current[s.id];
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollTo = (id: string) => {
-    sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
   return (
     <div className="min-h-screen bg-[hsl(var(--earth-light))]">
 
@@ -44,127 +14,101 @@ export default function Index() {
               <div className="w-8 h-8 bg-[hsl(var(--earth-ochre))] rounded-sm flex items-center justify-center text-lg">🏡</div>
               <span className="font-serif text-xl text-[hsl(var(--earth-cream))] font-semibold">КаркасДом</span>
             </div>
-
             <div className="hidden md:flex items-center gap-1">
               {sections.map((s) => (
-                <button
+                <Link
                   key={s.id}
-                  onClick={() => scrollTo(s.id)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
-                    activeSection === s.id
-                      ? "bg-[hsl(var(--earth-ochre))] text-[hsl(var(--earth-deep))]"
-                      : "text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))]"
-                  }`}
+                  to={`/${s.id}`}
+                  className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
                 >
                   {s.emoji} {s.title}
-                </button>
+                </Link>
               ))}
             </div>
-
-            <button
-              className="md:hidden text-[hsl(var(--earth-cream))] p-2"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <Icon name={menuOpen ? "X" : "Menu"} size={22} />
-            </button>
           </div>
         </div>
-
-        {menuOpen && (
-          <div className="md:hidden bg-[hsl(var(--earth-deep))] border-t border-white/10 px-4 py-3 grid grid-cols-2 gap-2 animate-fade-in">
-            {sections.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => scrollTo(s.id)}
-                className={`px-3 py-2 rounded text-sm text-left transition-all ${
-                  activeSection === s.id
-                    ? "bg-[hsl(var(--earth-ochre))] text-[hsl(var(--earth-deep))] font-semibold"
-                    : "text-[hsl(var(--earth-sand))]"
-                }`}
-              >
-                {s.emoji} {s.title}
-              </button>
-            ))}
-          </div>
-        )}
       </nav>
 
       {/* HERO */}
-      <HeroSection onScrollTo={scrollTo} />
+      <section className="relative h-[90vh] min-h-[500px] flex items-end overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${HERO_IMG})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[hsl(25,45%,12%)] via-[hsl(25,45%,12%)]/50 to-transparent" />
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pb-20 w-full">
+          <div className="max-w-2xl animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 bg-[hsl(var(--earth-ochre))]/20 border border-[hsl(var(--earth-ochre))]/40 rounded-full px-4 py-1.5 mb-5">
+              <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">Полное руководство по строительству</span>
+            </div>
+            <h1 className="font-serif text-5xl md:text-7xl font-bold text-[hsl(var(--earth-cream))] leading-none mb-4">
+              Каркасный<br/>
+              <span className="text-[hsl(var(--earth-ochre))]">дом</span> своими<br/>руками
+            </h1>
+            <p className="text-[hsl(var(--earth-sand))] text-lg md:text-xl leading-relaxed mb-8 max-w-lg">
+              От фундамента до отопления — пошаговые инструкции, нормы и калькуляторы материалов для каждого этапа строительства
+            </p>
+            <Link
+              to={`/${sections[0].id}`}
+              className="inline-flex items-center gap-2 bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] text-[hsl(var(--earth-deep))] font-semibold px-6 py-3 rounded-lg transition-all hover:scale-105"
+            >
+              <Icon name="Play" size={16} />
+              Начать с фундамента
+            </Link>
+          </div>
+        </div>
 
-      {/* SECTIONS */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
-        {sections.map((section, idx) => (
-          <section
-            key={section.id}
-            id={section.id}
-            ref={(el) => { sectionRefs.current[section.id] = el; }}
-            className="scroll-mt-20"
-          >
-            <div className="flex items-center gap-4 mb-10">
-              <div
-                className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0"
-                style={{ backgroundColor: section.color + "22", border: `2px solid ${section.color}44` }}
+        {/* Полоска этапов */}
+        <div className="absolute bottom-0 left-0 right-0 bg-[hsl(var(--earth-brown))]/80 backdrop-blur-sm border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-6 py-3 flex gap-1 overflow-x-auto">
+            {sections.map((s, i) => (
+              <Link
+                key={s.id}
+                to={`/${s.id}`}
+                className="flex items-center gap-2 whitespace-nowrap px-3 py-1 rounded hover:bg-white/10 transition-all group"
               >
-                {section.emoji}
-              </div>
-              <div>
-                <div className="text-xs text-[hsl(var(--muted-foreground))] font-medium tracking-widest uppercase mb-1">
-                  Этап {idx + 1}
+                <span className="w-5 h-5 rounded-full bg-[hsl(var(--earth-ochre))]/25 text-[hsl(var(--earth-ochre))] text-xs flex items-center justify-center font-bold">{i + 1}</span>
+                <span className="text-[hsl(var(--earth-cream))] text-sm group-hover:text-[hsl(var(--earth-ochre))] transition-colors">{s.title}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* КАРТОЧКИ РАЗДЕЛОВ */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--earth-deep))] mb-2">Этапы строительства</h2>
+        <p className="text-[hsl(var(--muted-foreground))] mb-10">Выберите раздел — откроется отдельная страница с инструкцией и калькулятором</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {sections.map((s, i) => (
+            <Link
+              key={s.id}
+              to={`/${s.id}`}
+              className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-2xl p-6 wood-texture hover:border-[hsl(var(--earth-ochre))] hover:shadow-lg transition-all hover:-translate-y-0.5"
+            >
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
+                  style={{ backgroundColor: s.color + "22", border: `2px solid ${s.color}44` }}
+                >
+                  {s.emoji}
                 </div>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[hsl(var(--earth-deep))] leading-none">
-                  {section.title}
-                </h2>
-                <p className="text-[hsl(var(--muted-foreground))] mt-1">{section.subtitle}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-[hsl(var(--muted-foreground))] tracking-widest uppercase mb-1">Этап {i + 1}</div>
+                  <h3 className="font-serif text-xl font-bold text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors">{s.title}</h3>
+                  <p className="text-sm text-[hsl(var(--muted-foreground))] mt-0.5">{s.subtitle}</p>
+                </div>
               </div>
-            </div>
-
-            {idx === 0 && (
-              <div className="rounded-2xl overflow-hidden mb-10 h-64 md:h-80">
-                <img
-                  src={FOUNDATION_IMG}
-                  alt="Фундамент каркасного дома"
-                  className="w-full h-full object-cover"
-                />
+              <div className="mt-4 flex items-center gap-1.5 text-xs font-medium" style={{ color: s.color }}>
+                <span>{s.content.length} темы</span>
+                <span>·</span>
+                <span>калькулятор</span>
+                <Icon name="ArrowRight" size={13} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              <div className="lg:col-span-2 space-y-5">
-                {section.content.map((block, bi) => (
-                  <div
-                    key={bi}
-                    className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-6 wood-texture"
-                  >
-                    <h3
-                      className="font-serif text-xl font-semibold mb-3"
-                      style={{ color: section.color }}
-                    >
-                      {block.heading}
-                    </h3>
-                    <p className="text-[hsl(var(--foreground))] leading-relaxed whitespace-pre-line text-sm md:text-base">
-                      {block.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="lg:col-span-1">
-                <SidebarBlock sidebar={section.sidebar} />
-              </div>
-            </div>
-
-            <Calculator calc={section.calc} />
-
-            {idx < sections.length - 1 && (
-              <div className="mt-16 flex items-center gap-4">
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[hsl(var(--earth-sand))] to-transparent" />
-                <span className="text-[hsl(var(--earth-sand))] text-xl">{sections[idx + 1].emoji}</span>
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[hsl(var(--earth-sand))] to-transparent" />
-              </div>
-            )}
-          </section>
-        ))}
+            </Link>
+          ))}
+        </div>
       </main>
 
       {/* FOOTER */}
@@ -177,13 +121,13 @@ export default function Index() {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             {sections.map((s) => (
-              <button
+              <Link
                 key={s.id}
-                onClick={() => scrollTo(s.id)}
+                to={`/${s.id}`}
                 className="text-xs text-[hsl(var(--earth-sand))]/60 hover:text-[hsl(var(--earth-ochre))] transition-colors"
               >
                 {s.emoji} {s.title}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
