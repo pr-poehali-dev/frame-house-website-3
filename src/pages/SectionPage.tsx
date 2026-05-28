@@ -104,19 +104,27 @@ export default function SectionPage() {
           {/* Левая часть: статьи + калькулятор */}
           <div className="lg:col-span-2 space-y-5">
             {section.content.map((block, bi) => (
-              <div
-                key={bi}
-                className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-6 wood-texture"
-              >
-                <h2
-                  className="font-serif text-xl font-semibold mb-3"
-                  style={{ color: section.color }}
-                >
-                  {block.heading}
-                </h2>
-                <p className="text-[hsl(var(--foreground))] leading-relaxed whitespace-pre-line text-sm md:text-base">
-                  {block.text}
-                </p>
+              <div key={bi}>
+                {bi === 0 && section.photo && (
+                  <div className="rounded-2xl overflow-hidden mb-5 h-56 md:h-72">
+                    <img
+                      src={section.photo}
+                      alt={section.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-6 wood-texture">
+                  <h2
+                    className="font-serif text-xl font-semibold mb-3"
+                    style={{ color: section.color }}
+                  >
+                    {block.heading}
+                  </h2>
+                  <p className="text-[hsl(var(--foreground))] leading-relaxed whitespace-pre-line text-sm md:text-base">
+                    {block.text}
+                  </p>
+                </div>
               </div>
             ))}
 
