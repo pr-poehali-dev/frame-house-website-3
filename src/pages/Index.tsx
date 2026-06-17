@@ -111,6 +111,31 @@ export default function Index() {
         </div>
       </main>
 
+      {/* БАННЕР КОНСТРУКТОРА */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <Link
+          to="/designer"
+          className="group flex flex-col md:flex-row items-center gap-6 bg-gradient-to-br from-[hsl(var(--earth-deep))] to-[hsl(var(--earth-brown))] rounded-2xl p-8 hover:shadow-xl transition-all hover:-translate-y-0.5"
+        >
+          <div className="text-6xl shrink-0">🌿</div>
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 bg-[hsl(var(--earth-ochre))]/20 border border-[hsl(var(--earth-ochre))]/40 rounded-full px-3 py-1 mb-2 text-xs text-[hsl(var(--earth-ochre))] font-medium">
+              Новинка
+            </div>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[hsl(var(--earth-cream))] mb-2">
+              Конструктор дизайна участка
+            </h2>
+            <p className="text-[hsl(var(--earth-sand))]/80 text-sm md:text-base">
+              Загрузите фото своего участка — ИИ нарисует дизайн в любом стиле: английский сад, прованс, японский, минимализм. Готовый результат за 49 ₽.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 bg-[hsl(var(--earth-ochre))] text-[hsl(var(--earth-deep))] font-semibold px-6 py-3 rounded-xl group-hover:scale-105 transition-all shrink-0">
+            <Icon name="Sparkles" size={16} />
+            Попробовать
+          </div>
+        </Link>
+      </section>
+
       {/* FOOTER */}
       <footer className="bg-[hsl(var(--earth-deep))] text-[hsl(var(--earth-sand))] py-12 mt-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
