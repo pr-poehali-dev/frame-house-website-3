@@ -12,6 +12,7 @@ STYLES = {
     "minimalist": "Современный минималистичный сад: бетонное мощение, геометрические формы, декоративные злаки, стальные бордюры, чистые линии",
     "russian": "Традиционный русский дачный участок: грядки с овощами, яблони, подсолнухи, деревянный забор, берёзы, дача",
     "provence": "Сад в стиле прованс: поля лаванды, белые камни, терракотовые горшки, розы, арочная пергола, средиземноморская атмосфера",
+    "custom": None,
 }
 
 
@@ -33,6 +34,7 @@ def handler(event: dict, context) -> dict:
         session_id = body.get("session_id")
         style = body.get("style")
         image_b64 = body.get("image_b64")
+        custom_desc = body.get("custom_desc", "")
 
         if not all([session_id, style, image_b64]):
             return _err("Не переданы обязательные параметры", 400)
@@ -40,16 +42,23 @@ def handler(event: dict, context) -> dict:
         if style not in STYLES:
             return _err(f"Неизвестный стиль: {style}", 400)
 
+        if style == "custom" and not custom_desc.strip():
+            return _err("Опишите желаемый дизайн", 400)
+
         api_key = os.environ.get("YANDEX_API_KEY", "")
         folder_id = os.environ.get("YANDEX_FOLDER_ID", "")
 
         if not api_key or not folder_id:
             return _err("Не настроены ключи YandexART", 500)
 
-        style_label = STYLES[style]
+        if style == "custom":
+            style_label = custom_desc.strip()
+        else:
+            style_label = STYLES[style]
+
         prompt = (
-            f"Фотореалистичный дизайн садового участка в стиле: {style_label}. "
-            "Профессиональнаяландшафтная фотография, высокое качество, дневной свет, детализированно."
+            f"Фотореалистичный дизайн садового участка: {style_label}. "
+            "Профессиональная ландшафтная фотография, высокое качество, дневной свет, детализированно."
         )
 
         headers_y = {

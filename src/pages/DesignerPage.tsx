@@ -4,11 +4,12 @@ import Icon from "@/components/ui/icon";
 import { PaymentButton } from "@/components/extensions/robokassa/PaymentButton";
 
 const STYLES = [
-  { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹" },
-  { id: "japanese", label: "Японский", desc: "Камни, мох, бамбук", emoji: "🎋" },
-  { id: "minimalist", label: "Минимализм", desc: "Бетон, геометрия", emoji: "⬜" },
-  { id: "russian", label: "Русская усадьба", desc: "Огород, яблони, забор", emoji: "🍎" },
-  { id: "provence", label: "Прованс", desc: "Лаванда, белые камни, арки", emoji: "💜" },
+  { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹", preview: "Ухоженный газон, живые изгороди, розовые клумбы, деревянная беседка и извилистые дорожки из камня" },
+  { id: "japanese", label: "Японский", desc: "Камни, мох, бамбук", emoji: "🎋", preview: "Граблёный гравий, бамбук, каменные фонари, пруд с карпами и деревянный мостик — атмосфера покоя" },
+  { id: "minimalist", label: "Минимализм", desc: "Бетон, геометрия", emoji: "⬜", preview: "Чистые линии, бетонное мощение, декоративные злаки и геометрические клумбы — современный стиль" },
+  { id: "russian", label: "Русская усадьба", desc: "Огород, яблони, забор", emoji: "🍎", preview: "Грядки с овощами, яблони и вишни, подсолнухи, деревянный резной забор — уютная дача" },
+  { id: "provence", label: "Прованс", desc: "Лаванда, белые камни, арки", emoji: "💜", preview: "Поля лаванды, белые камни, терракота, арочная пергола с розами — юг Франции у вас дома" },
+  { id: "custom", label: "Свой вариант", desc: "Опишите сами", emoji: "✏️", preview: "" },
 ];
 
 const GENERATE_URL = "https://functions.poehali.dev/013291cb-3443-41ab-9787-04a736f0f3f7";
@@ -25,6 +26,7 @@ export default function DesignerPage() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [customDesc, setCustomDesc] = useState<string>("");
   const [payForm, setPayForm] = useState({ name: "", email: "", phone: "" });
   const fileRef = useRef<HTMLInputElement>(null);
   const sessionId = useRef(`sess_${Date.now()}_${Math.random().toString(36).slice(2)}`);
@@ -56,6 +58,7 @@ export default function DesignerPage() {
         body: JSON.stringify({
           session_id: sessionId.current,
           style: selectedStyle,
+          custom_desc: selectedStyle === "custom" ? customDesc : undefined,
           image_b64: base64,
         }),
       });
@@ -202,17 +205,46 @@ export default function DesignerPage() {
                     }`}
                   >
                     <span className="text-2xl">{s.emoji}</span>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div className="font-medium text-sm text-[hsl(var(--earth-dark))]">{s.label}</div>
                       <div className="text-xs text-[hsl(var(--muted-foreground))]">{s.desc}</div>
                     </div>
                     {selectedStyle === s.id && (
-                      <Icon name="CheckCircle" size={16} className="ml-auto text-[hsl(var(--earth-brown))]" />
+                      <Icon name="CheckCircle" size={16} className="shrink-0 text-[hsl(var(--earth-brown))]" />
                     )}
                   </button>
                 ))}
               </div>
-              {selectedStyle && (
+
+              {/* Превью выбранного стиля */}
+              {selectedStyle && selectedStyle !== "custom" && (
+                <div className="mt-3 p-3 bg-[hsl(var(--earth-sand))]/20 border border-[hsl(var(--earth-sand))]/50 rounded-xl">
+                  <p className="text-xs text-[hsl(var(--earth-brown))] font-medium mb-0.5">
+                    {STYLES.find(s => s.id === selectedStyle)?.emoji} Что получится:
+                  </p>
+                  <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                    {STYLES.find(s => s.id === selectedStyle)?.preview}
+                  </p>
+                </div>
+              )}
+
+              {/* Поле для своего описания */}
+              {selectedStyle === "custom" && (
+                <div className="mt-3">
+                  <textarea
+                    value={customDesc}
+                    onChange={(e) => setCustomDesc(e.target.value)}
+                    placeholder="Опишите желаемый дизайн: растения, материалы, стиль, атмосферу... Например: «хочу розарий с беседкой и фонтаном, дорожки из натурального камня»"
+                    rows={4}
+                    className="w-full border border-[hsl(var(--earth-sand))] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[hsl(var(--earth-brown))] resize-none bg-white/80"
+                  />
+                  <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
+                    Чем подробнее — тем точнее результат
+                  </p>
+                </div>
+              )}
+
+              {selectedStyle && (selectedStyle !== "custom" || customDesc.trim()) && (
                 <button
                   onClick={() => setStep("pay")}
                   className="mt-4 w-full bg-[hsl(var(--earth-brown))] text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2"
