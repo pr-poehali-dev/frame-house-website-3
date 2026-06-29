@@ -18,7 +18,10 @@ def get_db_connection():
     dsn = os.environ.get('DATABASE_URL')
     if not dsn:
         raise ValueError('DATABASE_URL not configured')
-    return psycopg2.connect(dsn)
+    conn = psycopg2.connect(dsn)
+    schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+    conn.cursor().execute(f'SET search_path TO "{schema}"')
+    return conn
 
 
 HEADERS = {
