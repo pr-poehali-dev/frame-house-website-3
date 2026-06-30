@@ -151,7 +151,10 @@ export default function Index() {
           <p className="text-sm text-[hsl(var(--earth-sand))]/70 max-w-md mx-auto leading-relaxed">
             Информационный ресурс по строительству каркасных домов.<br/>Все расчёты носят ориентировочный характер.
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Link to="/about" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              О проекте
+            </Link>
             <Link to="/privacy" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Политика конфиденциальности
             </Link>
