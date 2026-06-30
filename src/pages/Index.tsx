@@ -24,6 +24,13 @@ export default function Index() {
                   {s.emoji} {s.title}
                 </Link>
               ))}
+              <Link
+                to="/designer"
+                className="ml-3 inline-flex items-center gap-1.5 bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] text-[hsl(var(--earth-deep))] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all hover:scale-105"
+              >
+                <Icon name="Sparkles" size={14} />
+                Дизайн участка
+              </Link>
             </div>
           </div>
         </div>
