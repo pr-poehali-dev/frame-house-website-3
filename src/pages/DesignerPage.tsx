@@ -145,6 +145,51 @@ export default function DesignerPage() {
         </div>
       </header>
 
+      {/* HERO LANDING */}
+      {step === "upload" && (
+        <section className="bg-gradient-to-br from-[hsl(var(--earth-deep))] to-[hsl(var(--earth-brown))] py-14 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-[hsl(var(--earth-ochre))]/20 border border-[hsl(var(--earth-ochre))]/40 rounded-full px-4 py-1.5 mb-5">
+              <Icon name="Sparkles" size={14} className="text-[hsl(var(--earth-ochre))]" />
+              <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">ИИ-визуализация за 49 ₽</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[hsl(var(--earth-cream))] mb-4 leading-tight">
+              Как будет выглядеть<br/>ваш участок?
+            </h2>
+            <p className="text-[hsl(var(--earth-sand))]/80 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+              Загрузите фото своего участка — ИИ перерисует его в любом стиле: английский сад, японский, прованс, минимализм. Готовый результат через 2 минуты.
+            </p>
+
+            {/* Стили-теги */}
+            <div className="flex flex-wrap justify-center gap-2 mb-10">
+              {STYLES.filter(s => s.id !== "custom").map(s => (
+                <span key={s.id} className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-[hsl(var(--earth-cream))] text-sm px-3 py-1.5 rounded-full">
+                  {s.emoji} {s.label}
+                </span>
+              ))}
+              <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-[hsl(var(--earth-cream))] text-sm px-3 py-1.5 rounded-full">
+                ✏️ Свой вариант
+              </span>
+            </div>
+
+            {/* Фичи */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+              {[
+                { icon: "Clock", title: "2 минуты", desc: "Результат готов быстро" },
+                { icon: "Layers", title: "До 3 стилей", desc: "Сравните варианты" },
+                { icon: "Download", title: "Скачайте", desc: "Сохраните изображение" },
+              ].map(f => (
+                <div key={f.title} className="bg-white/10 border border-white/15 rounded-xl p-4 text-center">
+                  <Icon name={f.icon as "Clock"} size={22} className="text-[hsl(var(--earth-ochre))] mx-auto mb-2" />
+                  <div className="font-bold text-[hsl(var(--earth-cream))] mb-0.5">{f.title}</div>
+                  <div className="text-xs text-[hsl(var(--earth-sand))]/70">{f.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Steps */}
         <div className="flex items-center gap-2 mb-8 justify-center flex-wrap">
@@ -178,25 +223,48 @@ export default function DesignerPage() {
         {/* Step: Upload */}
         {step === "upload" && (
           <div className="max-w-xl mx-auto">
+            <h2 className="font-serif text-2xl font-bold text-[hsl(var(--earth-dark))] text-center mb-6">
+              Шаг 1 — загрузите фото участка
+            </h2>
             <div
-              className="border-2 border-dashed border-[hsl(var(--earth-sand))] rounded-2xl p-12 text-center cursor-pointer hover:border-[hsl(var(--earth-brown))] hover:bg-[hsl(var(--earth-sand))]/10 transition-all"
+              className="border-2 border-dashed border-[hsl(var(--earth-brown))]/40 rounded-2xl p-12 text-center cursor-pointer hover:border-[hsl(var(--earth-brown))] hover:bg-[hsl(var(--earth-sand))]/10 transition-all bg-white/60 shadow-sm"
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileRef.current?.click()}
             >
-              <Icon name="ImagePlus" size={48} className="mx-auto mb-4 text-[hsl(var(--earth-sand))]" />
-              <h2 className="font-serif text-xl font-semibold text-[hsl(var(--earth-dark))] mb-2">
-                Загрузите фото вашего участка
-              </h2>
-              <p className="text-sm text-[hsl(var(--muted-foreground))] mb-4">
-                Перетащите файл или нажмите для выбора
+              <div className="w-16 h-16 bg-[hsl(var(--earth-ochre))]/15 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Icon name="ImagePlus" size={32} className="text-[hsl(var(--earth-ochre))]" />
+              </div>
+              <h3 className="font-serif text-xl font-semibold text-[hsl(var(--earth-dark))] mb-2">
+                Перетащите фото сюда
+              </h3>
+              <p className="text-sm text-[hsl(var(--muted-foreground))] mb-5">
+                или нажмите для выбора файла
               </p>
-              <span className="text-xs text-[hsl(var(--muted-foreground))]/60">JPG, PNG — до 10 МБ</span>
+              <span className="inline-flex items-center gap-2 bg-[hsl(var(--earth-brown))] text-white text-sm font-semibold px-5 py-2.5 rounded-xl">
+                <Icon name="Upload" size={15} />
+                Выбрать фото
+              </span>
+              <p className="text-xs text-[hsl(var(--muted-foreground))]/60 mt-4">JPG, PNG — до 10 МБ</p>
               <input ref={fileRef} type="file" accept="image/*" className="hidden"
                 onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
             </div>
-            <div className="mt-6 bg-white/70 rounded-xl p-4 border border-[hsl(var(--earth-sand))]/50">
-              <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
+
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              {[
+                { step: "1", text: "Загрузите фото участка" },
+                { step: "2", text: "Выберите стиль дизайна" },
+                { step: "3", text: "Получите результат" },
+              ].map(i => (
+                <div key={i.step} className="bg-white/70 border border-[hsl(var(--earth-sand))]/50 rounded-xl p-3 text-center">
+                  <div className="w-7 h-7 bg-[hsl(var(--earth-ochre))]/20 text-[hsl(var(--earth-ochre))] rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">{i.step}</div>
+                  <p className="text-xs text-[hsl(var(--muted-foreground))]">{i.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 bg-[hsl(var(--earth-ochre))]/10 border border-[hsl(var(--earth-ochre))]/25 rounded-xl p-4 text-center">
+              <p className="text-sm text-[hsl(var(--earth-dark))]">
                 ✨ Выберите <strong>1, 2 или 3 стиля</strong> — ИИ сгенерирует все варианты, вы сравниваете и выбираете лучший. <strong>49 ₽</strong> за каждый стиль.
               </p>
             </div>
