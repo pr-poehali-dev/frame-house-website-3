@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import type { Section } from "@/components/sections";
+import { reachGoal } from "@/lib/metrika";
 
 // ─── Рекламные баннеры ──────────────────────────────────────────────
 // Замените href, imageSrc и label на свои данные
@@ -46,6 +47,7 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: подключить отправку на почту или в CRM
+    reachGoal("consultation_form_submit");
     setSent(true);
     setTimeout(() => setSent(false), 4000);
     setFormData({ name: "", phone: "", comment: "" });

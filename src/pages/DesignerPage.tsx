@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { PaymentButton } from "@/components/extensions/robokassa/PaymentButton";
+import { reachGoal } from "@/lib/metrika";
 
 const STYLES = [
   { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹", preview: "Ухоженный газон, живые изгороди, розовые клумбы, деревянная беседка и извилистые дорожки из камня" },
@@ -109,8 +110,9 @@ export default function DesignerPage() {
   }, [imagePreview, selectedStyles, customDesc]);
 
   const handlePaySuccess = useCallback(() => {
+    reachGoal("designer_payment_success", { order_price: totalPrice, styles: selectedStyles });
     generateAll();
-  }, [generateAll]);
+  }, [generateAll, totalPrice, selectedStyles]);
 
   const reset = () => {
     setStep("upload");
@@ -537,6 +539,7 @@ export default function DesignerPage() {
                 <a
                   href={results[activeResult].url!}
                   download={`garden-${results[activeResult].styleId}.jpg`}
+                  onClick={() => reachGoal("designer_download", { style: results[activeResult].styleId })}
                   className="flex items-center gap-2 bg-[hsl(var(--earth-brown))] text-white px-5 py-2.5 rounded-xl font-medium hover:opacity-90 transition-all text-sm"
                 >
                   <Icon name="Download" size={16} />
@@ -545,6 +548,7 @@ export default function DesignerPage() {
                 {results.length > 1 && results.some((r, i) => i !== activeResult && r.url) && (
                   <button
                     onClick={() => {
+                      reachGoal("designer_download_all");
                       results.forEach((r) => {
                         if (r.url) {
                           const a = document.createElement("a");
