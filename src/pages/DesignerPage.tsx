@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { PaymentButton } from "@/components/extensions/robokassa/PaymentButton";
 import { reachGoal } from "@/lib/metrika";
+import Seo from "@/components/Seo";
 
 const STYLES = [
   { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹", preview: "Ухоженный газон, живые изгороди, розовые клумбы, деревянная беседка и извилистые дорожки из камня" },
@@ -130,6 +131,11 @@ export default function DesignerPage() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
+      <Seo
+        title="Конструктор дизайна участка онлайн — ИИ-визуализация за 49 ₽"
+        description="Загрузите фото своего участка — искусственный интеллект перерисует его в выбранном стиле: английский сад, японский сад, прованс, минимализм. Результат за 2 минуты."
+        path="/designer"
+      />
       {/* Header */}
       <header className="bg-white/90 border-b border-[hsl(var(--earth-sand))]/40 backdrop-blur-sm sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">

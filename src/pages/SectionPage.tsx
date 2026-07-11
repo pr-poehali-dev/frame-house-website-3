@@ -4,6 +4,7 @@ import Icon from "@/components/ui/icon";
 import { sections, FOUNDATION_IMG } from "@/components/sections";
 import Calculator from "@/components/Calculator";
 import PageSidebar from "@/components/PageSidebar";
+import Seo from "@/components/Seo";
 
 export default function SectionPage() {
   const { sectionId } = useParams<{ sectionId: string }>();
@@ -23,6 +24,11 @@ export default function SectionPage() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--earth-light))]">
+      <Seo
+        title={section.seoTitle || `${section.title} — КаркасДом`}
+        description={section.seoDescription || section.subtitle}
+        path={`/${section.id}`}
+      />
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--earth-deep))]/95 backdrop-blur-sm border-b border-white/10">

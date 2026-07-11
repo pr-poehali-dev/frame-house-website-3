@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import Seo from "@/components/Seo";
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[hsl(var(--earth-light))]">
+      <Seo
+        title="Политика конфиденциальности — КаркасДом"
+        description="Политика конфиденциальности сайта dacha365.site: сбор данных, использование cookie, Яндекс.Метрика, защита персональных данных пользователей."
+        path="/privacy"
+      />
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--earth-deep))]/95 backdrop-blur-sm border-b border-white/10">

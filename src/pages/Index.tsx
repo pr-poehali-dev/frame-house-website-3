@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { sections, HERO_IMG } from "@/components/sections";
+import Seo from "@/components/Seo";
 
 export default function Index() {
   return (
     <div className="min-h-screen bg-[hsl(var(--earth-light))]">
+      <Seo
+        title="КаркасДом — строительство от фундамента до ключа"
+        description="Полное руководство по строительству каркасного дома: фундамент, стены, крыша, электрика, канализация, отопление. Калькуляторы материалов и ИИ-конструктор дизайна участка."
+        path="/"
+      />
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--earth-deep))]/95 backdrop-blur-sm border-b border-white/10">

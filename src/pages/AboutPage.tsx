@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { sections } from "@/components/sections";
+import Seo from "@/components/Seo";
 
 const STATS = [
   { value: "6", label: "разделов строительства" },
@@ -35,6 +36,11 @@ const WHY_ITEMS = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[hsl(var(--earth-light))]">
+      <Seo
+        title="О проекте КаркасДом: руководство по строительству каркасных домов"
+        description="КаркасДом — бесплатный информационный ресурс по строительству каркасных домов: 6 разделов, 30+ инструкций, 6 калькуляторов материалов, актуальные нормы СНиП и ГОСТ."
+        path="/about"
+      />
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--earth-deep))]/95 backdrop-blur-sm border-b border-white/10">

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import type { Section } from "@/components/sections";
 import { reachGoal } from "@/lib/metrika";
