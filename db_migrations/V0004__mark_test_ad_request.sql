@@ -1,0 +1,1 @@
+UPDATE ad_requests SET status = 'test_ignore' WHERE email = 'test@example.com';

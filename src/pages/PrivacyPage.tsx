@@ -111,6 +111,7 @@ export default function PrivacyPage() {
           <div className="font-serif text-xl text-[hsl(var(--earth-cream))] mb-2">КаркасДом</div>
           <div className="flex justify-center gap-4 text-xs text-[hsl(var(--earth-sand))]/60">
             <Link to="/" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Главная</Link>
+            <Link to="/advertise" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Реклама на сайте</Link>
             <Link to="/privacy" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Политика конфиденциальности</Link>
           </div>
         </div>

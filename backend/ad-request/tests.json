@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "POST без обязательных полей",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400
+    },
+    {
+      "name": "POST с корректными данными",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "company_name": "Тестовая компания",
+        "contact_name": "Иван Иванов",
+        "phone": "+79001234567",
+        "email": "test@example.com",
+        "website": "https://example.com",
+        "comment": "Хотим разместить рекламу"
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial",
+      "expectedBody": {
+        "success": true
+      }
+    }
+  ]
+}

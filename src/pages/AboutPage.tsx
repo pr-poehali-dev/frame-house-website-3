@@ -161,6 +161,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap justify-center gap-4 text-xs text-[hsl(var(--earth-sand))]/60">
             <Link to="/" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Главная</Link>
             <Link to="/about" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">О проекте</Link>
+            <Link to="/advertise" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Реклама на сайте</Link>
             <Link to="/privacy" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Политика конфиденциальности</Link>
           </div>
         </div>

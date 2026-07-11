@@ -161,6 +161,9 @@ export default function Index() {
             <Link to="/about" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               О проекте
             </Link>
+            <Link to="/advertise" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Реклама на сайте
+            </Link>
             <Link to="/privacy" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Политика конфиденциальности
             </Link>
