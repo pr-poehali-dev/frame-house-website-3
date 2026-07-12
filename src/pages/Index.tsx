@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { sections, HERO_IMG } from "@/components/sections";
 import Seo from "@/components/Seo";
+import FaqSection from "@/components/FaqSection";
 
 export default function Index() {
   return (
@@ -148,6 +149,8 @@ export default function Index() {
           </div>
         </Link>
       </section>
+
+      <FaqSection />
 
       {/* FOOTER */}
       <footer className="bg-[hsl(var(--earth-deep))] text-[hsl(var(--earth-sand))] py-12 mt-8">
