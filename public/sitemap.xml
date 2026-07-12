@@ -41,6 +41,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dacha365.site/articles</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/svayno-vintovoy-fundament-svoimi-rukami</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/uteplenie-karkasnogo-doma-dlya-zimy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/skolko-stoit-postroit-karkasny-dom</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/razreshenie-na-stroitelstvo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/oshibki-pri-stroitelstve-karkasnogo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dacha365.site/about</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
