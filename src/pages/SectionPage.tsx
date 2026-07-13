@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { sections, FOUNDATION_IMG } from "@/components/sections";
+import { articles } from "@/components/articles";
 import Calculator from "@/components/Calculator";
 import PageSidebar from "@/components/PageSidebar";
 import Seo from "@/components/Seo";
@@ -14,6 +15,7 @@ export default function SectionPage() {
   const section = sections[idx];
   const prevSection = idx > 0 ? sections[idx - 1] : null;
   const nextSection = idx < sections.length - 1 ? sections[idx + 1] : null;
+  const relatedArticles = articles.filter((a) => a.relatedSection === sectionId);
 
   useEffect(() => {
     if (!section) navigate("/", { replace: true });
@@ -53,6 +55,12 @@ export default function SectionPage() {
                   {s.emoji} {s.title}
                 </Link>
               ))}
+              <Link
+                to="/articles"
+                className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
+              >
+                📚 Статьи
+              </Link>
             </div>
 
             {/* Mobile: текущий раздел + кнопка назад */}
@@ -60,6 +68,9 @@ export default function SectionPage() {
               <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">
                 {section.emoji} {section.title}
               </span>
+              <Link to="/articles" className="text-[hsl(var(--earth-sand))] p-1">
+                <Icon name="BookOpen" size={18} />
+              </Link>
               <Link to="/" className="text-[hsl(var(--earth-sand))] p-1">
                 <Icon name="Home" size={18} />
               </Link>
@@ -135,6 +146,45 @@ export default function SectionPage() {
             ))}
 
             <Calculator calc={section.calc} />
+
+            {/* Статьи по теме */}
+            {relatedArticles.length > 0 && (
+              <div>
+                <h2 className="font-serif text-lg font-semibold text-[hsl(var(--earth-dark))] mb-3">
+                  Статьи по теме «{section.title}»
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {relatedArticles.map((a) => (
+                    <Link
+                      key={a.slug}
+                      to={`/articles/${a.slug}`}
+                      className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-4 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shrink-0"
+                          style={{ backgroundColor: a.color + "22", border: `2px solid ${a.color}44` }}
+                        >
+                          {a.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors leading-snug">
+                            {a.title}
+                          </div>
+                          <div className="text-xs text-[hsl(var(--muted-foreground))] mt-1">{a.readTime} чтения</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                <Link
+                  to="/articles"
+                  className="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-[hsl(var(--earth-brown))] hover:opacity-70 transition-opacity"
+                >
+                  Все статьи <Icon name="ArrowRight" size={12} />
+                </Link>
+              </div>
+            )}
 
             {/* Prev / Next навигация */}
             <div className="flex gap-3 pt-2">

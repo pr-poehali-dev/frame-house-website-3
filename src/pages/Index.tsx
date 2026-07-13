@@ -32,6 +32,12 @@ export default function Index() {
                 </Link>
               ))}
               <Link
+                to="/articles"
+                className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
+              >
+                📚 Статьи
+              </Link>
+              <Link
                 to="/designer"
                 className="ml-3 inline-flex items-center gap-1.5 bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] text-[hsl(var(--earth-deep))] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all hover:scale-105"
               >
