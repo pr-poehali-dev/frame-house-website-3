@@ -111,6 +111,21 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dacha365.site/articles/vnutrennyaya-otdelka-karkasnogo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/ventilyatsiya-karkasnogo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/kak-vybrat-okna-dlya-karkasnogo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dacha365.site/about</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
