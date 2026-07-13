@@ -126,6 +126,21 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://dacha365.site/articles/otdelka-fasada-karkasnogo-doma</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/lestnitsa-v-karkasnom-dome-svoimi-rukami</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dacha365.site/articles/osveschenie-v-dome-kak-splanirovat</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dacha365.site/about</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
