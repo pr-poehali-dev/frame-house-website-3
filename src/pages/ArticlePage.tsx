@@ -104,6 +104,18 @@ export default function ArticlePage() {
             <Icon name="ArrowRight" size={18} className="text-[hsl(var(--earth-ochre))] shrink-0" />
           </Link>
         )}
+
+        <Link
+          to="/guides"
+          className="group flex items-center gap-4 bg-white/70 border border-[hsl(var(--earth-sand))]/60 wood-texture rounded-xl p-5 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
+        >
+          <div className="text-2xl shrink-0">📖</div>
+          <div className="flex-1">
+            <div className="text-xs text-[hsl(var(--muted-foreground))]">Сохранить себе</div>
+            <div className="font-semibold text-[hsl(var(--earth-deep))]">Скачать PDF-гайд по этой теме</div>
+          </div>
+          <Icon name="Download" size={18} className="text-[hsl(var(--earth-brown))] shrink-0" />
+        </Link>
       </main>
 
       {/* FOOTER */}

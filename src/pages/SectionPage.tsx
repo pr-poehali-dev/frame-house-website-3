@@ -156,6 +156,23 @@ export default function SectionPage() {
 
             <Calculator calc={section.calc} />
 
+            {/* Баннер PDF-гайда по разделу */}
+            <Link
+              to="/guides"
+              className="group flex items-center gap-4 bg-white/70 border border-[hsl(var(--earth-sand))]/60 wood-texture rounded-xl p-5 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
+            >
+              <div className="text-3xl shrink-0">📖</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors">
+                  Скачать PDF-гайд «{section.title}»
+                </div>
+                <div className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">
+                  Все инструкции этапа в одном файле — держите под рукой на стройке
+                </div>
+              </div>
+              <Icon name="Download" size={18} className="text-[hsl(var(--earth-brown))] shrink-0" />
+            </Link>
+
             {/* Статьи по теме */}
             {relatedArticles.length > 0 && (
               <div>

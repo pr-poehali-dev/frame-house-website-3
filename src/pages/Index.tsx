@@ -164,6 +164,31 @@ export default function Index() {
         </Link>
       </section>
 
+      {/* БАННЕР PDF-ГАЙДОВ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <Link
+          to="/guides"
+          className="group flex flex-col md:flex-row items-center gap-6 bg-white/70 border border-[hsl(var(--earth-sand))]/60 wood-texture rounded-2xl p-8 hover:border-[hsl(var(--earth-ochre))] hover:shadow-lg transition-all hover:-translate-y-0.5"
+        >
+          <div className="text-6xl shrink-0">📖</div>
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 bg-[hsl(var(--earth-brown))]/10 border border-[hsl(var(--earth-brown))]/30 rounded-full px-3 py-1 mb-2 text-xs text-[hsl(var(--earth-brown))] font-medium">
+              Скачать PDF
+            </div>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[hsl(var(--earth-deep))] mb-2">
+              PDF-гайды по каждому этапу стройки
+            </h2>
+            <p className="text-[hsl(var(--muted-foreground))] text-sm md:text-base">
+              Подробные инструкции по фундаменту, стенам, крыше, электрике, канализации и отоплению — держите на телефоне прямо на стройке. От 149 ₽.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 bg-[hsl(var(--earth-brown))] text-white font-semibold px-6 py-3 rounded-xl group-hover:scale-105 transition-all shrink-0">
+            <Icon name="Download" size={16} />
+            Смотреть гайды
+          </div>
+        </Link>
+      </section>
+
       <FaqSection />
 
       {/* FOOTER */}
