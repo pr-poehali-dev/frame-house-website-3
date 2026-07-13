@@ -203,6 +203,9 @@ export default function SectionPage() {
             <Link to="/about" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               О проекте
             </Link>
+            <Link to="/offerta" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Публичная оферта
+            </Link>
             <Link to="/privacy" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Политика конфиденциальности
             </Link>

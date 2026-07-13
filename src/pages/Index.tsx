@@ -170,6 +170,9 @@ export default function Index() {
             <Link to="/advertise" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Реклама на сайте
             </Link>
+            <Link to="/offerta" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Публичная оферта
+            </Link>
             <Link to="/privacy" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Политика конфиденциальности
             </Link>
