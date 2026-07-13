@@ -62,6 +62,12 @@ export default function SectionPage() {
               >
                 📚 Статьи
               </Link>
+              <Link
+                to="/guides"
+                className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
+              >
+                📖 Гайды
+              </Link>
               <SiteSearch />
             </div>
 

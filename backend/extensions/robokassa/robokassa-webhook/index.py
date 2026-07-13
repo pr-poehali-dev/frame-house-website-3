@@ -1,6 +1,7 @@
 import json
 import os
 import hashlib
+import secrets
 import psycopg2
 from urllib.parse import parse_qs
 
@@ -92,6 +93,25 @@ def handler(event: dict, context) -> dict:
         if existing and existing[0] == 'paid':
             return {'statusCode': 200, 'headers': HEADERS, 'body': f'OK{inv_id}', 'isBase64Encoded': False}
         return {'statusCode': 404, 'headers': HEADERS, 'body': 'Order not found', 'isBase64Encoded': False}
+
+    order_id = result[0]
+
+    # Если в заказе есть PDF-гайды — создаём токены скачивания
+    cur.execute("""
+        SELECT g.id, oi.product_id
+        FROM order_items oi
+        JOIN guides g ON g.slug = oi.product_id
+        WHERE oi.order_id = %s
+    """, (order_id,))
+    guide_rows = cur.fetchall()
+
+    for guide_id, _ in guide_rows:
+        token = secrets.token_urlsafe(24)
+        cur.execute("""
+            INSERT INTO guide_downloads (order_id, guide_id, download_token)
+            VALUES (%s, %s, %s)
+            ON CONFLICT DO NOTHING
+        """, (order_id, guide_id, token))
 
     conn.commit()
     cur.close()

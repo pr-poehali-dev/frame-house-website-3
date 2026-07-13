@@ -38,6 +38,12 @@ export default function Index() {
               >
                 📚 Статьи
               </Link>
+              <Link
+                to="/guides"
+                className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
+              >
+                📖 Гайды
+              </Link>
               <SiteSearch />
               <Link
                 to="/designer"
@@ -174,6 +180,9 @@ export default function Index() {
             </Link>
             <Link to="/articles" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Статьи
+            </Link>
+            <Link to="/guides" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Гайды
             </Link>
             <Link to="/advertise" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Реклама на сайте
