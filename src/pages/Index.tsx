@@ -3,6 +3,7 @@ import Icon from "@/components/ui/icon";
 import { sections, HERO_IMG } from "@/components/sections";
 import Seo from "@/components/Seo";
 import FaqSection from "@/components/FaqSection";
+import SiteSearch from "@/components/SiteSearch";
 
 export default function Index() {
   return (
@@ -37,6 +38,7 @@ export default function Index() {
               >
                 📚 Статьи
               </Link>
+              <SiteSearch />
               <Link
                 to="/designer"
                 className="ml-3 inline-flex items-center gap-1.5 bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] text-[hsl(var(--earth-deep))] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all hover:scale-105"

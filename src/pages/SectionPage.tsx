@@ -6,6 +6,7 @@ import { articles } from "@/components/articles";
 import Calculator from "@/components/Calculator";
 import PageSidebar from "@/components/PageSidebar";
 import Seo from "@/components/Seo";
+import SiteSearch from "@/components/SiteSearch";
 
 export default function SectionPage() {
   const { sectionId } = useParams<{ sectionId: string }>();
@@ -61,6 +62,7 @@ export default function SectionPage() {
               >
                 📚 Статьи
               </Link>
+              <SiteSearch />
             </div>
 
             {/* Mobile: текущий раздел + кнопка назад */}
@@ -68,6 +70,7 @@ export default function SectionPage() {
               <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">
                 {section.emoji} {section.title}
               </span>
+              <SiteSearch variant="icon" />
               <Link to="/articles" className="text-[hsl(var(--earth-sand))] p-1">
                 <Icon name="BookOpen" size={18} />
               </Link>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { articles } from "@/components/articles";
 import Seo from "@/components/Seo";
+import SiteSearch from "@/components/SiteSearch";
 
 export default function ArticlesPage() {
   return (
@@ -20,10 +21,13 @@ export default function ArticlesPage() {
               <div className="w-8 h-8 bg-[hsl(var(--earth-ochre))] rounded-sm flex items-center justify-center text-lg">🏡</div>
               <span className="font-serif text-xl text-[hsl(var(--earth-cream))] font-semibold">КаркасДом</span>
             </Link>
-            <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all">
-              <Icon name="ArrowLeft" size={14} />
-              На главную
-            </Link>
+            <div className="flex items-center gap-2">
+              <SiteSearch variant="icon" />
+              <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all">
+                <Icon name="ArrowLeft" size={14} />
+                На главную
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

@@ -7,6 +7,7 @@ import DesignerHero from "@/components/designer/DesignerHero";
 import DesignerStyleStep from "@/components/designer/DesignerStyleStep";
 import DesignerPayStep from "@/components/designer/DesignerPayStep";
 import DesignerResultStep from "@/components/designer/DesignerResultStep";
+import SiteSearch from "@/components/SiteSearch";
 
 const STYLES = [
   { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹", preview: "Ухоженный газон, живые изгороди, розовые клумбы, деревянная беседка и извилистые дорожки из камня" },
@@ -150,6 +151,7 @@ export default function DesignerPage() {
               Загрузите фото — получите визуализацию в любом стиле
             </p>
           </div>
+          <SiteSearch variant="icon" className="text-[hsl(var(--earth-brown))] hover:opacity-70 p-1" />
         </div>
       </header>
 
