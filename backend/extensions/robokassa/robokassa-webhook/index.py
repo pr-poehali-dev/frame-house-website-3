@@ -2,14 +2,47 @@ import json
 import os
 import hashlib
 import secrets
+import smtplib
 import psycopg2
+from email.mime.text import MIMEText
 from urllib.parse import parse_qs
+
+SMTP_FROM_EMAIL = 'yunaliev.ismail@yandex.ru'
 
 
 def calculate_signature(*args) -> str:
     """Создание MD5 подписи по документации Robokassa"""
     joined = ':'.join(str(arg) for arg in args)
     return hashlib.md5(joined.encode()).hexdigest().upper()
+
+
+def send_confirmation_email(to_email: str, order_number: str, amount: float, guide_items: list) -> None:
+    """Отправка письма клиенту с подтверждением оплаты и ссылками на скачивание гайдов"""
+    smtp_password = os.environ.get('SMTP_PASSWORD')
+    if not smtp_password or not to_email:
+        return
+
+    lines = [f'Спасибо за заказ №{order_number}!', f'Сумма оплаты: {amount:.2f} ₽', '']
+
+    if guide_items:
+        lines.append('Ваши PDF-гайды готовы к скачиванию:')
+        for title, pdf_url in guide_items:
+            lines.append(f'— {title}: {pdf_url}')
+        lines.append('')
+
+    lines.append('Спасибо, что выбрали КаркасДом!')
+
+    msg = MIMEText('\n'.join(lines), 'plain', 'utf-8')
+    msg['Subject'] = f'Заказ №{order_number} оплачен'
+    msg['From'] = SMTP_FROM_EMAIL
+    msg['To'] = to_email
+
+    try:
+        with smtplib.SMTP_SSL('smtp.yandex.ru', 465) as server:
+            server.login(SMTP_FROM_EMAIL, smtp_password)
+            server.sendmail(SMTP_FROM_EMAIL, [to_email], msg.as_string())
+    except Exception as e:
+        print(f'Email send error: {e}')
 
 
 def get_db_connection():
@@ -94,30 +127,34 @@ def handler(event: dict, context) -> dict:
             return {'statusCode': 200, 'headers': HEADERS, 'body': f'OK{inv_id}', 'isBase64Encoded': False}
         return {'statusCode': 404, 'headers': HEADERS, 'body': 'Order not found', 'isBase64Encoded': False}
 
-    order_id = result[0]
+    order_id, order_number, user_email = result
 
     # Если в заказе есть PDF-гайды — создаём токены скачивания
     cur.execute("""
-        SELECT g.id, oi.product_id
+        SELECT g.id, g.title, g.pdf_url
         FROM order_items oi
         JOIN guides g ON g.slug = oi.product_id
         WHERE oi.order_id = %s
     """, (order_id,))
     guide_rows = cur.fetchall()
 
-    for guide_id, _ in guide_rows:
+    guide_download_links = []
+    for guide_id, guide_title, guide_pdf_url in guide_rows:
         token = secrets.token_urlsafe(24)
         cur.execute("""
             INSERT INTO guide_downloads (order_id, guide_id, download_token)
             VALUES (%s, %s, %s)
             ON CONFLICT DO NOTHING
         """, (order_id, guide_id, token))
+        guide_download_links.append((guide_title, guide_pdf_url))
+
+    cur.execute("SELECT amount FROM orders WHERE id = %s", (order_id,))
+    order_amount = float(cur.fetchone()[0])
 
     conn.commit()
     cur.close()
     conn.close()
 
-    # TODO: Отправить уведомление (email, telegram) после успешной оплаты
-    # order_id, order_number, user_email = result
+    send_confirmation_email(user_email, order_number, order_amount, guide_download_links)
 
     return {'statusCode': 200, 'headers': HEADERS, 'body': f'OK{inv_id}', 'isBase64Encoded': False}
