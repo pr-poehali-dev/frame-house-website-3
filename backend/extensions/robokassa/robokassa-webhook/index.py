@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from urllib.parse import parse_qs
 
 SMTP_FROM_EMAIL = 'yunaliev.ismail@yandex.ru'
+OWNER_EMAIL = 'yunaliev.ismail@yandex.ru'
 
 
 def calculate_signature(*args) -> str:
@@ -43,6 +44,39 @@ def send_confirmation_email(to_email: str, order_number: str, amount: float, gui
             server.sendmail(SMTP_FROM_EMAIL, [to_email], msg.as_string())
     except Exception as e:
         print(f'Email send error: {e}')
+
+
+def send_owner_notification(order_number: str, amount: float, user_name: str, user_email: str, user_phone: str, guide_items: list) -> None:
+    """Уведомление владельцу магазина о новой оплате"""
+    smtp_password = os.environ.get('SMTP_PASSWORD')
+    if not smtp_password:
+        return
+
+    lines = [
+        f'Новая оплата заказа №{order_number}',
+        f'Сумма: {amount:.2f} ₽',
+        f'Клиент: {user_name}',
+        f'Email: {user_email}',
+        f'Телефон: {user_phone}',
+    ]
+
+    if guide_items:
+        lines.append('')
+        lines.append('Товары:')
+        for title, _ in guide_items:
+            lines.append(f'— {title}')
+
+    msg = MIMEText('\n'.join(lines), 'plain', 'utf-8')
+    msg['Subject'] = f'Новая оплата: заказ №{order_number}'
+    msg['From'] = SMTP_FROM_EMAIL
+    msg['To'] = OWNER_EMAIL
+
+    try:
+        with smtplib.SMTP_SSL('smtp.yandex.ru', 465) as server:
+            server.login(SMTP_FROM_EMAIL, smtp_password)
+            server.sendmail(SMTP_FROM_EMAIL, [OWNER_EMAIL], msg.as_string())
+    except Exception as e:
+        print(f'Owner email send error: {e}')
 
 
 def get_db_connection():
@@ -112,7 +146,7 @@ def handler(event: dict, context) -> dict:
         UPDATE orders
         SET status = 'paid', paid_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
         WHERE robokassa_inv_id = %s AND status = 'pending'
-        RETURNING id, order_number, user_email
+        RETURNING id, order_number, user_email, user_name, user_phone
     """, (int(inv_id),))
 
     result = cur.fetchone()
@@ -127,7 +161,7 @@ def handler(event: dict, context) -> dict:
             return {'statusCode': 200, 'headers': HEADERS, 'body': f'OK{inv_id}', 'isBase64Encoded': False}
         return {'statusCode': 404, 'headers': HEADERS, 'body': 'Order not found', 'isBase64Encoded': False}
 
-    order_id, order_number, user_email = result
+    order_id, order_number, user_email, user_name, user_phone = result
 
     # Если в заказе есть PDF-гайды — создаём токены скачивания
     cur.execute("""
@@ -156,5 +190,6 @@ def handler(event: dict, context) -> dict:
     conn.close()
 
     send_confirmation_email(user_email, order_number, order_amount, guide_download_links)
+    send_owner_notification(order_number, order_amount, user_name, user_email, user_phone, guide_download_links)
 
     return {'statusCode': 200, 'headers': HEADERS, 'body': f'OK{inv_id}', 'isBase64Encoded': False}
