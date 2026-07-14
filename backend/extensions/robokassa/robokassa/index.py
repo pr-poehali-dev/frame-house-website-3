@@ -32,7 +32,7 @@ HEADERS = {
 }
 
 ROBOKASSA_URL = 'https://auth.robokassa.ru/Merchant/Index.aspx'
-# force redeploy to refresh env vars
+# force redeploy to refresh env vars v2
 
 
 def handler(event: dict, context) -> dict:
