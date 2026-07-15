@@ -46,6 +46,25 @@ def handler(event: dict, context) -> dict:
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': HEADERS, 'body': '', 'isBase64Encoded': False}
 
+    if method == 'GET' and (event.get('queryStringParameters') or {}).get('debug') == '1':
+        login = os.environ.get('ROBOKASSA_MERCHANT_LOGIN') or ''
+        p1 = os.environ.get('ROBOKASSA_PASSWORD_1') or ''
+        p2 = os.environ.get('ROBOKASSA_PASSWORD_2') or ''
+        return {
+            'statusCode': 200,
+            'headers': HEADERS,
+            'body': json.dumps({
+                'merchant_login': login,
+                'merchant_login_len': len(login),
+                'merchant_login_has_ws': login != login.strip(),
+                'password_1_len': len(p1),
+                'password_1_has_ws': p1 != p1.strip(),
+                'password_2_len': len(p2),
+                'password_2_has_ws': p2 != p2.strip(),
+            }),
+            'isBase64Encoded': False
+        }
+
     if method != 'POST':
         return {'statusCode': 405, 'headers': HEADERS, 'body': json.dumps({'error': 'Method not allowed'}), 'isBase64Encoded': False}
 
