@@ -32,7 +32,39 @@ HEADERS = {
 }
 
 ROBOKASSA_URL = 'https://auth.robokassa.ru/Merchant/Index.aspx'
-# force redeploy to refresh env vars v2
+
+# Настройки фискализации (54-ФЗ): УСН доходы, без НДС
+TAX_SYSTEM = 'usn_income'
+VAT_TYPE = 'none'
+
+
+def build_receipt(cart_items: list, amount: float, order_number: str) -> dict:
+    """Формирование чека для фискализации Robokassa (54-ФЗ)"""
+    items = []
+    if cart_items:
+        for item in cart_items:
+            price = float(item.get('price', 0))
+            quantity = float(item.get('quantity', 1)) or 1
+            name = str(item.get('name', order_number))[:128]
+            items.append({
+                'name': name,
+                'quantity': quantity,
+                'sum': round(price * quantity, 2),
+                'payment_method': 'full_payment',
+                'payment_object': 'service',
+                'tax': VAT_TYPE
+            })
+    else:
+        items.append({
+            'name': f'Заказ {order_number}'[:128],
+            'quantity': 1,
+            'sum': round(amount, 2),
+            'payment_method': 'full_payment',
+            'payment_object': 'service',
+            'tax': VAT_TYPE
+        })
+
+    return {'sno': TAX_SYSTEM, 'items': items}
 
 
 def handler(event: dict, context) -> dict:
@@ -45,25 +77,6 @@ def handler(event: dict, context) -> dict:
 
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': HEADERS, 'body': '', 'isBase64Encoded': False}
-
-    if method == 'GET' and (event.get('queryStringParameters') or {}).get('debug') == '1':
-        login = os.environ.get('ROBOKASSA_MERCHANT_LOGIN') or ''
-        p1 = os.environ.get('ROBOKASSA_PASSWORD_1') or ''
-        p2 = os.environ.get('ROBOKASSA_PASSWORD_2') or ''
-        return {
-            'statusCode': 200,
-            'headers': HEADERS,
-            'body': json.dumps({
-                'merchant_login': login,
-                'merchant_login_len': len(login),
-                'merchant_login_has_ws': login != login.strip(),
-                'password_1_len': len(p1),
-                'password_1_has_ws': p1 != p1.strip(),
-                'password_2_len': len(p2),
-                'password_2_has_ws': p2 != p2.strip(),
-            }),
-            'isBase64Encoded': False
-        }
 
     if method != 'POST':
         return {'statusCode': 405, 'headers': HEADERS, 'body': json.dumps({'error': 'Method not allowed'}), 'isBase64Encoded': False}
@@ -122,14 +135,19 @@ def handler(event: dict, context) -> dict:
         # Формирование ссылки на оплату
         amount_str = f"{amount:.2f}"
 
-        # Подпись: MerchantLogin:OutSum:InvId:Password#1 (SuccessUrl2/FailUrl2 в подпись НЕ входят)
-        signature = calculate_signature(merchant_login, amount_str, robokassa_inv_id, password_1)
+        # Чек для фискализации (54-ФЗ) — обязателен при включённой фискализации в кабинете Robokassa
+        receipt = build_receipt(cart_items, amount, order_number)
+        receipt_json = json.dumps(receipt, ensure_ascii=False, separators=(',', ':'))
+
+        # Подпись: MerchantLogin:OutSum:InvId:Receipt:Password#1 (SuccessUrl2/FailUrl2 в подпись НЕ входят)
+        signature = calculate_signature(merchant_login, amount_str, robokassa_inv_id, receipt_json, password_1)
 
         query_params = {
             'MerchantLogin': merchant_login,
             'OutSum': amount_str,
             'InvoiceID': robokassa_inv_id,
             'SignatureValue': signature,
+            'Receipt': receipt_json,
             'Email': user_email,
             'Culture': 'ru',
             'Description': f'Заказ {order_number}'
