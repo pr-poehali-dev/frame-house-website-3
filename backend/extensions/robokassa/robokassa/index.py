@@ -139,8 +139,13 @@ def handler(event: dict, context) -> dict:
         receipt = build_receipt(cart_items, amount, order_number)
         receipt_json = json.dumps(receipt, ensure_ascii=False, separators=(',', ':'))
 
-        # Подпись: MerchantLogin:OutSum:InvId:Receipt:Password#1 (SuccessUrl2/FailUrl2 в подпись НЕ входят)
-        signature = calculate_signature(merchant_login, amount_str, robokassa_inv_id, receipt_json, password_1)
+        # Формула подписи (по документации Robokassa):
+        # MerchantLogin:OutSum:InvId:Receipt[:SuccessUrl2:SuccessUrl2Method:FailUrl2:FailUrl2Method]:Password#1
+        signature_parts = [merchant_login, amount_str, robokassa_inv_id, receipt_json]
+        if success_url and fail_url:
+            signature_parts += [success_url, 'GET', fail_url, 'GET']
+        signature_parts.append(password_1)
+        signature = calculate_signature(*signature_parts)
 
         query_params = {
             'MerchantLogin': merchant_login,
@@ -153,10 +158,9 @@ def handler(event: dict, context) -> dict:
             'Description': f'Заказ {order_number}'
         }
 
-        if success_url:
+        if success_url and fail_url:
             query_params['SuccessUrl2'] = success_url
             query_params['SuccessUrl2Method'] = 'GET'
-        if fail_url:
             query_params['FailUrl2'] = fail_url
             query_params['FailUrl2Method'] = 'GET'
 
