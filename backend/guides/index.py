@@ -5,7 +5,7 @@ import random
 import base64
 import boto3
 import psycopg2
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote_plus
 from datetime import datetime
 
 
@@ -31,6 +31,25 @@ HEADERS = {
 }
 
 ROBOKASSA_URL = 'https://auth.robokassa.ru/Merchant/Index.aspx'
+
+# Настройки фискализации (54-ФЗ): УСН доходы, без НДС
+TAX_SYSTEM = 'usn_income'
+VAT_TYPE = 'none'
+
+
+def build_receipt(name: str, amount: float) -> dict:
+    """Формирование чека для фискализации Robokassa (54-ФЗ)"""
+    return {
+        'sno': TAX_SYSTEM,
+        'items': [{
+            'name': name[:128],
+            'quantity': 1,
+            'sum': round(amount, 2),
+            'payment_method': 'full_payment',
+            'payment_object': 'service',
+            'tax': VAT_TYPE
+        }]
+    }
 
 
 def handler(event: dict, context) -> dict:
@@ -165,6 +184,11 @@ def handler(event: dict, context) -> dict:
             return {'statusCode': 500, 'headers': HEADERS, 'body': json.dumps({'error': 'Robokassa credentials not configured'}), 'isBase64Encoded': False}
 
         guide_slug = str(payload.get('guide_slug', ''))
+        if not guide_slug:
+            cart_items = payload.get('cart_items') or []
+            if cart_items:
+                guide_slug = str(cart_items[0].get('id', ''))
+
         user_name = str(payload.get('user_name', ''))
         user_email = str(payload.get('user_email', ''))
         user_phone = str(payload.get('user_phone', ''))
@@ -209,7 +233,19 @@ def handler(event: dict, context) -> dict:
         """, (order_id, guide_slug, guide_title, amount, 1))
 
         amount_str = f"{amount:.2f}"
-        signature = calculate_signature(merchant_login, amount_str, robokassa_inv_id, password_1)
+
+        # Чек для фискализации (54-ФЗ) — обязателен при включённой фискализации в кабинете Robokassa
+        receipt = build_receipt(f'PDF-гайд: {guide_title}', amount)
+        receipt_json = json.dumps(receipt, ensure_ascii=False, separators=(',', ':'))
+        receipt_encoded = quote_plus(receipt_json)
+
+        # Формула подписи (по документации Robokassa):
+        # MerchantLogin:OutSum:InvId:Receipt(url-encoded)[:SuccessUrl2:SuccessUrl2Method:FailUrl2:FailUrl2Method]:Password#1
+        signature_parts = [merchant_login, amount_str, robokassa_inv_id, receipt_encoded]
+        if success_url and fail_url:
+            signature_parts += [success_url, 'GET', fail_url, 'GET']
+        signature_parts.append(password_1)
+        signature = calculate_signature(*signature_parts)
 
         query_params = {
             'MerchantLogin': merchant_login,
@@ -220,14 +256,14 @@ def handler(event: dict, context) -> dict:
             'Culture': 'ru',
             'Description': f'PDF-гайд: {guide_title}'
         }
-        if success_url:
+        if success_url and fail_url:
             query_params['SuccessUrl2'] = success_url
             query_params['SuccessUrl2Method'] = 'GET'
-        if fail_url:
             query_params['FailUrl2'] = fail_url
             query_params['FailUrl2Method'] = 'GET'
 
-        payment_url = f"{ROBOKASSA_URL}?{urlencode(query_params)}"
+        # В GET-ссылке Receipt должен быть URL-кодирован дважды
+        payment_url = f"{ROBOKASSA_URL}?{urlencode(query_params)}&Receipt={quote_plus(receipt_encoded)}"
 
         cur.execute("UPDATE orders SET payment_url = %s WHERE id = %s", (payment_url, order_id))
         conn.commit()
