@@ -129,12 +129,18 @@ def handler(event: dict, context) -> dict:
     out_sum = params.get('OutSum', params.get('out_summ', ''))
     inv_id = params.get('InvId', params.get('inv_id', ''))
     signature_value = params.get('SignatureValue', params.get('crc', '')).upper()
+    receipt = params.get('Receipt')
 
     if not out_sum or not inv_id or not signature_value:
         return {'statusCode': 400, 'headers': HEADERS, 'body': 'Missing required parameters', 'isBase64Encoded': False}
 
-    # Проверка подписи
-    expected_signature = calculate_signature(out_sum, inv_id, password_2)
+    # Проверка подписи. Если Receipt передан Robokassa — он входит в формулу подписи:
+    # OutSum:InvId:Receipt:Password#2, иначе OutSum:InvId:Password#2
+    if receipt:
+        expected_signature = calculate_signature(out_sum, inv_id, receipt, password_2)
+    else:
+        expected_signature = calculate_signature(out_sum, inv_id, password_2)
+
     if signature_value != expected_signature:
         return {'statusCode': 400, 'headers': HEADERS, 'body': 'Invalid signature', 'isBase64Encoded': False}
 

@@ -3,7 +3,7 @@ import os
 import hashlib
 import psycopg2
 import random
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote_plus
 from datetime import datetime
 
 
@@ -138,10 +138,12 @@ def handler(event: dict, context) -> dict:
         # Чек для фискализации (54-ФЗ) — обязателен при включённой фискализации в кабинете Robokassa
         receipt = build_receipt(cart_items, amount, order_number)
         receipt_json = json.dumps(receipt, ensure_ascii=False, separators=(',', ':'))
+        # Receipt участвует в подписи и в самом запросе в URL-кодированном виде (однократно)
+        receipt_encoded = quote_plus(receipt_json)
 
         # Формула подписи (по документации Robokassa):
-        # MerchantLogin:OutSum:InvId:Receipt[:SuccessUrl2:SuccessUrl2Method:FailUrl2:FailUrl2Method]:Password#1
-        signature_parts = [merchant_login, amount_str, robokassa_inv_id, receipt_json]
+        # MerchantLogin:OutSum:InvId:Receipt(url-encoded)[:SuccessUrl2:SuccessUrl2Method:FailUrl2:FailUrl2Method]:Password#1
+        signature_parts = [merchant_login, amount_str, robokassa_inv_id, receipt_encoded]
         if success_url and fail_url:
             signature_parts += [success_url, 'GET', fail_url, 'GET']
         signature_parts.append(password_1)
@@ -152,7 +154,6 @@ def handler(event: dict, context) -> dict:
             'OutSum': amount_str,
             'InvoiceID': robokassa_inv_id,
             'SignatureValue': signature,
-            'Receipt': receipt_json,
             'Email': user_email,
             'Culture': 'ru',
             'Description': f'Заказ {order_number}'
@@ -164,7 +165,9 @@ def handler(event: dict, context) -> dict:
             query_params['FailUrl2'] = fail_url
             query_params['FailUrl2Method'] = 'GET'
 
-        payment_url = f"{ROBOKASSA_URL}?{urlencode(query_params)}"
+        # В GET-ссылке Receipt должен быть URL-кодирован дважды:
+        # urlencode() кодирует уже один раз закодированное значение receipt_encoded
+        payment_url = f"{ROBOKASSA_URL}?{urlencode(query_params)}&Receipt={quote_plus(receipt_encoded)}"
 
         cur.execute("UPDATE orders SET payment_url = %s WHERE id = %s", (payment_url, order_id))
         conn.commit()
