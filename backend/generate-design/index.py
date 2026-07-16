@@ -29,6 +29,25 @@ def handler(event: dict, context) -> dict:
             "body": "",
         }
 
+    if event.get("httpMethod") == "GET" and (event.get("queryStringParameters") or {}).get("debug") == "1":
+        api_key = os.environ.get("YANDEX_API_KEY", "")
+        folder_id = os.environ.get("YANDEX_FOLDER_ID", "")
+        return {
+            "statusCode": 200,
+            "headers": {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"},
+            "body": json.dumps({
+                "api_key_len": len(api_key),
+                "api_key_ascii": api_key.isascii(),
+                "api_key_has_ws": api_key != api_key.strip(),
+                "api_key_prefix": api_key[:5],
+                "folder_id_len": len(folder_id),
+                "folder_id_ascii": folder_id.isascii(),
+                "folder_id_has_ws": folder_id != folder_id.strip(),
+                "folder_id_value": folder_id,
+            }, ensure_ascii=True),
+            "isBase64Encoded": False,
+        }
+
     try:
         body = json.loads(event.get("body") or "{}")
         session_id = body.get("session_id")
@@ -126,8 +145,8 @@ def handler(event: dict, context) -> dict:
 
         return {
             "statusCode": 200,
-            "headers": {"Access-Control-Allow-Origin": "*"},
-            "body": json.dumps({"result_url": cdn_result, "style": style}),
+            "headers": {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"},
+            "body": json.dumps({"result_url": cdn_result, "style": style}, ensure_ascii=True),
             "isBase64Encoded": False,
         }
 
@@ -138,7 +157,7 @@ def handler(event: dict, context) -> dict:
 def _err(msg: str, code: int) -> dict:
     return {
         "statusCode": code,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": {"error": msg},
+        "headers": {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"},
+        "body": json.dumps({"error": msg}, ensure_ascii=True),
         "isBase64Encoded": False,
     }
