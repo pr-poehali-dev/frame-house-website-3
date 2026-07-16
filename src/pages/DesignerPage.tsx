@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { reachGoal } from "@/lib/metrika";
@@ -21,8 +21,10 @@ const STYLES = [
 const GENERATE_URL = "https://functions.poehali.dev/013291cb-3443-41ab-9787-04a736f0f3f7";
 const ROBOKASSA_URL = "https://functions.poehali.dev/76ea08e8-c733-44bf-b365-5bb8f67af536";
 const PRICE_PER = 49;
+const PENDING_ORDER_KEY = "designer_pending_order";
+const PENDING_STATE_KEY = "designer_pending_state";
 
-type Step = "upload" | "style" | "pay" | "generating" | "result";
+type Step = "upload" | "style" | "pay" | "checking" | "generating" | "result";
 
 interface ResultItem {
   styleId: string;
@@ -31,6 +33,12 @@ interface ResultItem {
   url: string | null;
   error: string | null;
   loading: boolean;
+}
+
+interface PendingState {
+  imagePreview: string;
+  selectedStyles: string[];
+  customDesc: string;
 }
 
 export default function DesignerPage() {
@@ -71,11 +79,10 @@ export default function DesignerPage() {
     selectedStyles.length > 0 &&
     (!selectedStyles.includes("custom") || customDesc.trim().length > 0);
 
-  const generateAll = useCallback(async () => {
-    if (!imagePreview) return;
-    const base64 = imagePreview.split(",")[1];
+  const generateAll = useCallback(async (photo: string, styles: string[], custom: string) => {
+    const base64 = photo.split(",")[1];
 
-    const initial: ResultItem[] = selectedStyles.map((sid) => {
+    const initial: ResultItem[] = styles.map((sid) => {
       const s = STYLES.find((x) => x.id === sid)!;
       return { styleId: sid, label: s.label, emoji: s.emoji, url: null, error: null, loading: true };
     });
@@ -84,7 +91,7 @@ export default function DesignerPage() {
     setStep("result");
 
     await Promise.all(
-      selectedStyles.map(async (sid, idx) => {
+      styles.map(async (sid, idx) => {
         try {
           const resp = await fetch(GENERATE_URL, {
             method: "POST",
@@ -92,7 +99,7 @@ export default function DesignerPage() {
             body: JSON.stringify({
               session_id: `${sessionId.current}_${sid}`,
               style: sid,
-              custom_desc: sid === "custom" ? customDesc : undefined,
+              custom_desc: sid === "custom" ? custom : undefined,
               image_b64: base64,
             }),
           });
@@ -112,12 +119,72 @@ export default function DesignerPage() {
         }
       })
     );
+  }, []);
+
+  const handleOrderCreated = useCallback((orderNumber: string) => {
+    if (imagePreview) {
+      const pending: PendingState = { imagePreview, selectedStyles, customDesc };
+      localStorage.setItem(PENDING_ORDER_KEY, orderNumber);
+      localStorage.setItem(PENDING_STATE_KEY, JSON.stringify(pending));
+    }
   }, [imagePreview, selectedStyles, customDesc]);
 
-  const handlePaySuccess = useCallback(() => {
-    reachGoal("designer_payment_success", { order_price: totalPrice, styles: selectedStyles });
-    generateAll();
-  }, [generateAll, totalPrice, selectedStyles]);
+  // Проверяем незавершённый заказ при загрузке страницы (возврат после оплаты Robokassa)
+  useEffect(() => {
+    const pendingOrder = localStorage.getItem(PENDING_ORDER_KEY);
+    const pendingStateRaw = localStorage.getItem(PENDING_STATE_KEY);
+    if (!pendingOrder || !pendingStateRaw) return;
+
+    let pendingState: PendingState;
+    try {
+      pendingState = JSON.parse(pendingStateRaw);
+    } catch {
+      localStorage.removeItem(PENDING_ORDER_KEY);
+      localStorage.removeItem(PENDING_STATE_KEY);
+      return;
+    }
+
+    setStep("checking");
+
+    const checkStatus = async (attemptsLeft: number) => {
+      try {
+        const resp = await fetch(`${ROBOKASSA_URL}?order_number=${encodeURIComponent(pendingOrder)}`);
+        const data = await resp.json();
+
+        if (data.status === "paid") {
+          localStorage.removeItem(PENDING_ORDER_KEY);
+          localStorage.removeItem(PENDING_STATE_KEY);
+          setImagePreview(pendingState.imagePreview);
+          setSelectedStyles(pendingState.selectedStyles);
+          setCustomDesc(pendingState.customDesc);
+          reachGoal("designer_payment_success", { styles: pendingState.selectedStyles });
+          generateAll(pendingState.imagePreview, pendingState.selectedStyles, pendingState.customDesc);
+          return;
+        }
+
+        if (attemptsLeft > 0) {
+          setTimeout(() => checkStatus(attemptsLeft - 1), 2000);
+        } else {
+          localStorage.removeItem(PENDING_ORDER_KEY);
+          localStorage.removeItem(PENDING_STATE_KEY);
+          setPayError("Не удалось подтвердить оплату. Если деньги списались — напишите нам, мы разберёмся.");
+          setImagePreview(pendingState.imagePreview);
+          setSelectedStyles(pendingState.selectedStyles);
+          setCustomDesc(pendingState.customDesc);
+          setStep("pay");
+        }
+      } catch {
+        if (attemptsLeft > 0) {
+          setTimeout(() => checkStatus(attemptsLeft - 1), 2000);
+        } else {
+          setStep("upload");
+        }
+      }
+    };
+
+    checkStatus(15);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const reset = () => {
     setStep("upload");
@@ -174,7 +241,7 @@ export default function DesignerPage() {
             { key: "pay", label: "Оплата", icon: "CreditCard" },
             { key: "result", label: "Сравнение", icon: "LayoutGrid" },
           ].map((s, i) => {
-            const steps: Step[] = ["upload", "style", "pay", "generating", "result"];
+            const steps: Step[] = ["upload", "style", "pay", "checking", "generating", "result"];
             const current = steps.indexOf(step);
             const idx = steps.indexOf(s.key as Step);
             const done = current > idx;
@@ -223,10 +290,19 @@ export default function DesignerPage() {
             payForm={payForm}
             payError={payError}
             onPayFormChange={setPayForm}
-            onPaySuccess={handlePaySuccess}
+            onOrderCreated={handleOrderCreated}
             onPayError={setPayError}
             onBack={() => setStep("style")}
           />
+        )}
+
+        {/* Step: Checking payment after redirect back from Robokassa */}
+        {step === "checking" && (
+          <div className="max-w-md mx-auto text-center py-16">
+            <div className="w-12 h-12 border-4 border-[hsl(var(--earth-sand))] border-t-[hsl(var(--earth-brown))] rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-[hsl(var(--earth-dark))] font-medium">Проверяем оплату...</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">Обычно это занимает несколько секунд</p>
+          </div>
         )}
 
         {/* Step: Result with comparison */}

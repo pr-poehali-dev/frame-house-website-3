@@ -23,7 +23,7 @@ interface DesignerPayStepProps {
   payForm: PayForm;
   payError: string | null;
   onPayFormChange: (form: PayForm) => void;
-  onPaySuccess: () => void;
+  onOrderCreated: (orderNumber: string) => void;
   onPayError: (message: string) => void;
   onBack: () => void;
 }
@@ -37,7 +37,7 @@ export default function DesignerPayStep({
   payForm,
   payError,
   onPayFormChange,
-  onPaySuccess,
+  onOrderCreated,
   onPayError,
   onBack,
 }: DesignerPayStepProps) {
@@ -93,7 +93,7 @@ export default function DesignerPayStep({
           })}
           successUrl={`${window.location.origin}/designer`}
           failUrl={`${window.location.origin}/designer`}
-          onSuccess={onPaySuccess}
+          onOrderCreated={onOrderCreated}
           onError={(e) => onPayError(e.message)}
           buttonText={`Оплатить ${totalPrice} ₽`}
           className="w-full bg-[hsl(var(--earth-brown))] text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-all"

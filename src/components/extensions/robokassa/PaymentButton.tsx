@@ -34,6 +34,8 @@ interface PaymentButtonProps {
   failUrl?: string;
   /** Callback при успешной оплате */
   onSuccess?: (orderNumber: string) => void;
+  /** Callback сразу после создания заказа, перед переходом на страницу оплаты */
+  onOrderCreated?: (orderNumber: string) => void;
   /** Callback при ошибке */
   onError?: (error: Error) => void;
   /** Текст кнопки */
@@ -60,6 +62,7 @@ export function PaymentButton({
   successUrl,
   failUrl,
   onSuccess,
+  onOrderCreated,
   onError,
   buttonText = "Оплатить",
   className = "",
@@ -92,6 +95,8 @@ export function PaymentButton({
       };
 
       const result = await createPayment(payload);
+
+      onOrderCreated?.(result.order_number);
 
       // Открываем страницу оплаты
       openPaymentPage(result.payment_url);

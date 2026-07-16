@@ -69,14 +69,33 @@ def build_receipt(cart_items: list, amount: float, order_number: str) -> dict:
 
 def handler(event: dict, context) -> dict:
     '''
-    Создание заказа и генерация ссылки на оплату Robokassa.
+    Создание заказа и генерация ссылки на оплату Robokassa, проверка статуса заказа.
     POST body: amount, user_name, user_email, user_phone, user_address, cart_items
     Returns: payment_url, order_id, order_number
+    GET ?order_number=XXX -> {status: pending|paid}
     '''
     method = event.get('httpMethod', 'GET').upper()
 
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': HEADERS, 'body': '', 'isBase64Encoded': False}
+
+    if method == 'GET':
+        params = event.get('queryStringParameters') or {}
+        order_number = params.get('order_number')
+        if not order_number:
+            return {'statusCode': 400, 'headers': HEADERS, 'body': json.dumps({'error': 'order_number required'}), 'isBase64Encoded': False}
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT status FROM orders WHERE order_number = %s", (order_number,))
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if not row:
+            return {'statusCode': 404, 'headers': HEADERS, 'body': json.dumps({'error': 'Order not found'}), 'isBase64Encoded': False}
+
+        return {'statusCode': 200, 'headers': HEADERS, 'body': json.dumps({'status': row[0]}), 'isBase64Encoded': False}
 
     if method != 'POST':
         return {'statusCode': 405, 'headers': HEADERS, 'body': json.dumps({'error': 'Method not allowed'}), 'isBase64Encoded': False}
