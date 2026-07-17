@@ -1,23 +1,22 @@
 import json
 import os
 import base64
-import time
 import boto3
 import requests
-from datetime import datetime
+import time
 
 STYLES = {
-    "english": "Английский сад: ухоженный газон, розы, цветочные клумбы, деревянная беседка, изогнутые дорожки, живая изгородь, загородный стиль",
-    "japanese": "Японский дзен-сад: граблёный гравий, мох, бамбук, каменные фонари, бонсай, пруд с карпами, деревянный мостик, минимализм",
-    "minimalist": "Современный минималистичный сад: бетонное мощение, геометрические формы, декоративные злаки, стальные бордюры, чистые линии",
-    "russian": "Традиционный русский дачный участок: грядки с овощами, яблони, подсолнухи, деревянный забор, берёзы, дача",
-    "provence": "Сад в стиле прованс: поля лаванды, белые камни, терракотовые горшки, розы, арочная пергола, средиземноморская атмосфера",
+    "english": "English garden style: neatly trimmed lawn, roses, flower beds, wooden pergola, curved pathways, hedges, countryside atmosphere",
+    "japanese": "Japanese zen garden style: raked gravel, moss, bamboo, stone lanterns, bonsai trees, koi pond, wooden bridge, minimalism",
+    "minimalist": "Modern minimalist garden style: concrete pavement, geometric shapes, ornamental grasses, steel edging, clean lines",
+    "russian": "Traditional Russian countryside garden style: vegetable beds, apple trees, sunflowers, wooden fence, birch trees, dacha atmosphere",
+    "provence": "Provence style garden: lavender fields, white stones, terracotta pots, roses, arched pergola, mediterranean atmosphere",
     "custom": None,
 }
 
 
 def handler(event: dict, context) -> dict:
-    """Генерация дизайна участка через YandexART после оплаты."""
+    """Генерация дизайна участка на основе загруженного фото через OpenAI (img2img)."""
     if event.get("httpMethod") == "OPTIONS":
         return {
             "statusCode": 200,
@@ -37,19 +36,18 @@ def handler(event: dict, context) -> dict:
         custom_desc = body.get("custom_desc", "")
 
         if not all([session_id, style, image_b64]):
-            return _err("Не переданы обязательные параметры", 400)
+            return _err("Missing required parameters", 400)
 
         if style not in STYLES:
-            return _err(f"Неизвестный стиль: {style}", 400)
+            return _err(f"Unknown style: {style}", 400)
 
         if style == "custom" and not custom_desc.strip():
-            return _err("Опишите желаемый дизайн", 400)
+            return _err("Please describe the desired design", 400)
 
-        api_key = os.environ.get("YANDEX_API_KEY", "")
-        folder_id = os.environ.get("YANDEX_FOLDER_ID", "")
+        api_key = os.environ.get("OPENAI_API_KEY", "")
 
-        if not api_key or not folder_id:
-            return _err("Не настроены ключи YandexART", 500)
+        if not api_key:
+            return _err("OpenAI API key is not configured", 500)
 
         if style == "custom":
             style_label = custom_desc.strip()
@@ -57,60 +55,35 @@ def handler(event: dict, context) -> dict:
             style_label = STYLES[style]
 
         prompt = (
-            f"Фотореалистичный дизайн садового участка: {style_label}. "
-            "Профессиональная ландшафтная фотография, высокое качество, дневной свет, детализированно."
+            f"Redesign this garden/backyard photo in the following style: {style_label}. "
+            "Keep the same camera angle, perspective, house and overall layout of the yard, "
+            "but transform the plants, landscaping, paths and decor according to the style. "
+            "Photorealistic, high quality, daylight, highly detailed."
         )
 
-        headers_y = {
-            "Authorization": f"Api-Key {api_key}",
-            "Content-Type": "application/json",
-        }
-
-        # Запускаем асинхронную генерацию YandexART
-        payload = {
-            "modelUri": f"art://{folder_id}/yandex-art/latest",
-            "generationOptions": {
-                "seed": int(time.time()) % 10000,
-                "aspectRatio": {"widthRatio": 16, "heightRatio": 9},
-            },
-            "messages": [
-                {"weight": 1, "text": prompt},
-                {"weight": 0.5, "image": {"data": image_b64}},
-            ],
-        }
+        image_bytes = base64.b64decode(image_b64)
 
         resp = requests.post(
-            "https://llm.api.cloud.yandex.net/foundationModels/v1/imageGenerationAsync",
-            headers=headers_y,
-            json=payload,
-            timeout=15,
+            "https://api.openai.com/v1/images/edits",
+            headers={"Authorization": f"Bearer {api_key}"},
+            files={"image": ("photo.jpg", image_bytes, "image/jpeg")},
+            data={
+                "model": "gpt-image-1",
+                "prompt": prompt,
+                "size": "1536x1024",
+                "n": 1,
+            },
+            timeout=120,
         )
 
         if resp.status_code != 200:
-            return _err(f"Ошибка запуска генерации: {resp.text}", 500)
+            return _err(f"Generation request failed: {resp.text}", 500)
 
-        operation_id = resp.json().get("id")
-        if not operation_id:
-            return _err("Не получен ID операции", 500)
+        result_data = resp.json().get("data", [])
+        if not result_data or not result_data[0].get("b64_json"):
+            return _err("No image returned from generation service", 500)
 
-        # Ждём результат (до 90 сек)
-        result_b64 = None
-        for _ in range(45):
-            time.sleep(2)
-            check = requests.get(
-                f"https://llm.api.cloud.yandex.net/operations/{operation_id}",
-                headers=headers_y,
-                timeout=10,
-            ).json()
-
-            if check.get("done"):
-                result_b64 = check.get("response", {}).get("image")
-                break
-            if check.get("error"):
-                return _err(f"Ошибка генерации: {check['error'].get('message', '')}", 500)
-
-        if not result_b64:
-            return _err("Превышено время ожидания генерации", 504)
+        result_b64 = result_data[0]["b64_json"]
 
         # Сохраняем результат в S3
         result_img = base64.b64decode(result_b64)
