@@ -64,7 +64,7 @@ def handler(event: dict, context) -> dict:
         image_bytes = base64.b64decode(image_b64)
 
         resp = requests.post(
-            "https://api.openai.com/v1/images/edits",
+            "https://api.proxyapi.ru/openai/v1/images/edits",
             headers={"Authorization": f"Bearer {api_key}"},
             files={"image": ("photo.jpg", image_bytes, "image/jpeg")},
             data={
