@@ -20,7 +20,7 @@ const STYLES = [
 
 const GENERATE_URL = "https://functions.poehali.dev/013291cb-3443-41ab-9787-04a736f0f3f7";
 const ROBOKASSA_URL = "https://functions.poehali.dev/76ea08e8-c733-44bf-b365-5bb8f67af536";
-const PRICE_PER = 49;
+const PRICE_PER = 62;
 const PENDING_ORDER_KEY = "designer_pending_order";
 const PENDING_STATE_KEY = "designer_pending_state";
 
@@ -200,7 +200,7 @@ export default function DesignerPage() {
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
       <Seo
-        title="Конструктор дизайна участка онлайн — ИИ-визуализация за 49 ₽"
+        title="Конструктор дизайна участка онлайн — ИИ-визуализация за 62 ₽"
         description="Загрузите фото своего участка — искусственный интеллект перерисует его в выбранном стиле: английский сад, японский сад, прованс, минимализм. Результат за 2 минуты."
         path="/designer"
       />

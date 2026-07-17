@@ -154,7 +154,7 @@ export default function Index() {
               Конструктор дизайна участка
             </h2>
             <p className="text-[hsl(var(--earth-sand))]/80 text-sm md:text-base">
-              Загрузите фото своего участка — ИИ нарисует дизайн в любом стиле: английский сад, прованс, японский, минимализм. Готовый результат за 49 ₽.
+              Загрузите фото своего участка — ИИ нарисует дизайн в любом стиле: английский сад, прованс, японский, минимализм. Готовый результат за 62 ₽.
             </p>
           </div>
           <div className="flex items-center gap-2 bg-[hsl(var(--earth-ochre))] text-[hsl(var(--earth-deep))] font-semibold px-6 py-3 rounded-xl group-hover:scale-105 transition-all shrink-0">

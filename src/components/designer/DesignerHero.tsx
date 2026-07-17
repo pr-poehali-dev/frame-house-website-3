@@ -22,7 +22,7 @@ export default function DesignerHero({ styles, fileRef, onDrop, onFileChange }: 
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-[hsl(var(--earth-ochre))]/20 border border-[hsl(var(--earth-ochre))]/40 rounded-full px-4 py-1.5 mb-5">
             <Icon name="Sparkles" size={14} className="text-[hsl(var(--earth-ochre))]" />
-            <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">ИИ-визуализация за 49 ₽</span>
+            <span className="text-[hsl(var(--earth-ochre))] text-sm font-medium">ИИ-визуализация за 62 ₽</span>
           </div>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-[hsl(var(--earth-cream))] mb-4 leading-tight">
             Как будет выглядеть<br/>ваш участок?
@@ -103,7 +103,7 @@ export default function DesignerHero({ styles, fileRef, onDrop, onFileChange }: 
 
         <div className="mt-4 bg-[hsl(var(--earth-ochre))]/10 border border-[hsl(var(--earth-ochre))]/25 rounded-xl p-4 text-center">
           <p className="text-sm text-[hsl(var(--earth-dark))]">
-            ✨ Выберите <strong>1, 2 или 3 стиля</strong> — ИИ сгенерирует все варианты, вы сравниваете и выбираете лучший. <strong>49 ₽</strong> за каждый стиль.
+            ✨ Выберите <strong>1, 2 или 3 стиля</strong> — ИИ сгенерирует все варианты, вы сравниваете и выбираете лучший. <strong>62 ₽</strong> за каждый стиль.
           </p>
         </div>
 
