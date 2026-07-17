@@ -48,18 +48,27 @@ export default function GuidesPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const checkOrder = useCallback(async (slug: string, orderNumber: string) => {
+  const checkOrder = useCallback(async (slug: string, orderNumber: string, attemptsLeft = 15) => {
     setChecking((prev) => ({ ...prev, [slug]: true }));
     try {
       const resp = await fetch(`${GUIDES_URL}?order_number=${orderNumber}`);
       const data = await resp.json();
       if (data.status === "paid" && data.items?.[0]?.download_token) {
         setDownloadLinks((prev) => ({ ...prev, [slug]: data.items[0].download_token }));
+        setChecking((prev) => ({ ...prev, [slug]: false }));
+        return;
+      }
+      if (attemptsLeft > 0) {
+        setTimeout(() => checkOrder(slug, orderNumber, attemptsLeft - 1), 2000);
+      } else {
+        setChecking((prev) => ({ ...prev, [slug]: false }));
       }
     } catch {
-      // ignore
-    } finally {
-      setChecking((prev) => ({ ...prev, [slug]: false }));
+      if (attemptsLeft > 0) {
+        setTimeout(() => checkOrder(slug, orderNumber, attemptsLeft - 1), 2000);
+      } else {
+        setChecking((prev) => ({ ...prev, [slug]: false }));
+      }
     }
   }, []);
 
@@ -76,11 +85,10 @@ export default function GuidesPage() {
     if (data.pdf_url) window.open(data.pdf_url, "_blank");
   };
 
-  const handlePaySuccess = (orderNumber: string) => {
+  const handleOrderCreated = (orderNumber: string) => {
     if (!activeGuide) return;
     storeOrder(activeGuide.slug, orderNumber);
     setActiveGuide(null);
-    setTimeout(() => checkOrder(activeGuide.slug, orderNumber), 1500);
   };
 
   return (
@@ -235,7 +243,7 @@ export default function GuidesPage() {
               cartItems={[{ id: activeGuide.slug, name: activeGuide.title, price: activeGuide.price, quantity: 1 }]}
               successUrl={`${window.location.origin}/guides`}
               failUrl={`${window.location.origin}/guides`}
-              onSuccess={handlePaySuccess}
+              onOrderCreated={handleOrderCreated}
               onError={(e) => setPayError(e.message)}
               buttonText={`Оплатить ${activeGuide.price} ₽`}
               className="w-full bg-[hsl(var(--earth-brown))] text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-all"
