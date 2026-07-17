@@ -71,6 +71,7 @@ def handler(event: dict, context) -> dict:
                 "model": "gpt-image-1",
                 "prompt": prompt,
                 "size": "1536x1024",
+                "quality": "medium",
                 "n": 1,
             },
             timeout=120,
