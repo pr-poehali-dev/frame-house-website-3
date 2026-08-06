@@ -91,6 +91,20 @@ export default function ArticlePage() {
           </div>
         ))}
 
+        {article.relatedSection === "designer" && (
+          <Link
+            to="/designer"
+            className="group flex items-center gap-4 bg-[hsl(var(--earth-ochre))]/10 border border-[hsl(var(--earth-ochre))]/40 rounded-xl p-5 hover:bg-[hsl(var(--earth-ochre))]/20 transition-all"
+          >
+            <div className="text-2xl shrink-0">🎨</div>
+            <div className="flex-1">
+              <div className="text-xs text-[hsl(var(--muted-foreground))]">ИИ-визуализация за 62 ₽</div>
+              <div className="font-semibold text-[hsl(var(--earth-deep))]">Попробовать конструктор дизайна участка</div>
+            </div>
+            <Icon name="ArrowRight" size={18} className="text-[hsl(var(--earth-ochre))] shrink-0" />
+          </Link>
+        )}
+
         {relatedSection && (
           <Link
             to={`/${relatedSection.id}`}
