@@ -279,6 +279,9 @@ export default function SectionPage() {
             <Link to="/about" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               О проекте
             </Link>
+            <Link to="/contacts" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Контакты
+            </Link>
             <Link to="/offerta" className="text-xs text-[hsl(var(--earth-sand))]/40 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Публичная оферта
             </Link>

@@ -316,6 +316,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://dacha365.site/contacts</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://dacha365.site/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

@@ -209,6 +209,9 @@ export default function Index() {
             <Link to="/guides" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Гайды
             </Link>
+            <Link to="/contacts" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
+              Контакты
+            </Link>
             <Link to="/advertise" className="text-xs text-[hsl(var(--earth-sand))]/50 hover:text-[hsl(var(--earth-ochre))] transition-colors">
               Реклама на сайте
             </Link>

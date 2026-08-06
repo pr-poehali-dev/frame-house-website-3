@@ -117,6 +117,7 @@ export default function OffertaPage() {
           <div className="font-serif text-xl text-[hsl(var(--earth-cream))] mb-2">КаркасДом</div>
           <div className="flex flex-wrap justify-center gap-4 text-xs text-[hsl(var(--earth-sand))]/60">
             <Link to="/" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Главная</Link>
+            <Link to="/contacts" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Контакты</Link>
             <Link to="/advertise" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Реклама на сайте</Link>
             <Link to="/offerta" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Публичная оферта</Link>
             <Link to="/privacy" className="hover:text-[hsl(var(--earth-ochre))] transition-colors">Политика конфиденциальности</Link>

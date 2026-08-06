@@ -11,6 +11,7 @@ import DesignerPage from "./pages/DesignerPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import OffertaPage from "./pages/OffertaPage";
 import AboutPage from "./pages/AboutPage";
+import ContactsPage from "./pages/ContactsPage";
 import AdvertisePage from "./pages/AdvertisePage";
 import ArticlesPage from "./pages/ArticlesPage";
 import ArticlePage from "./pages/ArticlePage";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/offerta" element={<OffertaPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/advertise" element={<AdvertisePage />} />
             <Route path="/articles" element={<ArticlesPage />} />
             <Route path="/articles/:slug" element={<ArticlePage />} />
