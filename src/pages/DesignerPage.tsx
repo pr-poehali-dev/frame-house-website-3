@@ -8,6 +8,7 @@ import DesignerStyleStep from "@/components/designer/DesignerStyleStep";
 import DesignerPayStep from "@/components/designer/DesignerPayStep";
 import DesignerResultStep from "@/components/designer/DesignerResultStep";
 import SiteSearch from "@/components/SiteSearch";
+import ShareButtons from "@/components/ShareButtons";
 
 const STYLES = [
   { id: "english", label: "Английский сад", desc: "Газон, розы, беседка", emoji: "🌹", preview: "Ухоженный газон, живые изгороди, розовые клумбы, деревянная беседка и извилистые дорожки из камня" },
@@ -222,14 +223,19 @@ export default function DesignerPage() {
           <Link to="/" className="text-[hsl(var(--earth-brown))] hover:opacity-70">
             <Icon name="ArrowLeft" size={20} />
           </Link>
-          <div className="flex-1">
-            <h1 className="font-serif text-xl font-bold text-[hsl(var(--earth-dark))]">
+          <div className="flex-1 min-w-0">
+            <h1 className="font-serif text-lg sm:text-xl font-bold text-[hsl(var(--earth-dark))] truncate">
               Конструктор дизайна участка
             </h1>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+            <p className="hidden sm:block text-xs text-[hsl(var(--muted-foreground))]">
               Загрузите фото — получите визуализацию в любом стиле
             </p>
           </div>
+          <ShareButtons
+            url="https://dacha365.site/designer"
+            title="Конструктор дизайна участка — ИИ-визуализация за 62 ₽"
+            source="designer_header"
+          />
           <SiteSearch variant="icon" className="text-[hsl(var(--earth-brown))] hover:opacity-70 p-1" />
         </div>
       </header>

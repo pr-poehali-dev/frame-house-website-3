@@ -81,8 +81,8 @@ export default function ShareButtons({ url, title, source }: ShareButtonsProps) 
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-xs text-[hsl(var(--muted-foreground))] mr-1 flex items-center gap-1.5">
+    <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+      <span className="hidden sm:flex text-xs text-[hsl(var(--muted-foreground))] mr-1 items-center gap-1.5 whitespace-nowrap">
         <Icon name="Share2" size={14} />
         Поделиться:
       </span>
@@ -91,7 +91,7 @@ export default function ShareButtons({ url, title, source }: ShareButtonsProps) 
           key={n.id}
           onClick={() => handleShare(n.id, n.getUrl(url, title))}
           aria-label={`Поделиться в ${n.label}`}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:opacity-85 hover:scale-105 transition-all"
+          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white hover:opacity-85 hover:scale-105 transition-all shrink-0"
           style={{ backgroundColor: n.color }}
         >
           {n.svg}
@@ -100,7 +100,7 @@ export default function ShareButtons({ url, title, source }: ShareButtonsProps) 
       <button
         onClick={handleCopy}
         aria-label="Скопировать ссылку"
-        className="w-8 h-8 rounded-full flex items-center justify-center bg-[hsl(var(--earth-sand))]/60 text-[hsl(var(--earth-deep))] hover:bg-[hsl(var(--earth-sand))] transition-all"
+        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-[hsl(var(--earth-sand))]/60 text-[hsl(var(--earth-deep))] hover:bg-[hsl(var(--earth-sand))] transition-all shrink-0"
       >
         <Icon name={copied ? "Check" : "Link2"} size={15} />
       </button>
