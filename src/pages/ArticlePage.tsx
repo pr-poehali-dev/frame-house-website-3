@@ -5,7 +5,10 @@ import { articles } from "@/components/articles";
 import { sections } from "@/components/sections";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
+import ShareButtons from "@/components/ShareButtons";
 import { reachGoal } from "@/lib/metrika";
+
+const SITE_URL = "https://dacha365.site";
 
 export default function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -72,9 +75,14 @@ export default function ArticlePage() {
               </div>
               <div className="text-xs text-[hsl(var(--muted-foreground))] tracking-widest uppercase">{article.readTime} чтения</div>
             </div>
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--earth-deep))] leading-tight">
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[hsl(var(--earth-deep))] leading-tight mb-4">
               {article.title}
             </h1>
+            <ShareButtons
+              url={`${SITE_URL}/articles/${article.slug}`}
+              title={article.title}
+              source="top"
+            />
           </div>
         </div>
       </div>
@@ -91,6 +99,14 @@ export default function ArticlePage() {
             </p>
           </div>
         ))}
+
+        <div className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-5 wood-texture flex items-center justify-center">
+          <ShareButtons
+            url={`${SITE_URL}/articles/${article.slug}`}
+            title={article.title}
+            source="bottom"
+          />
+        </div>
 
         {article.relatedSection === "designer" && (
           <Link
