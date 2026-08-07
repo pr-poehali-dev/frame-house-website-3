@@ -5,6 +5,7 @@ import { articles } from "@/components/articles";
 import { sections } from "@/components/sections";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
+import { reachGoal } from "@/lib/metrika";
 
 export default function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -93,7 +94,8 @@ export default function ArticlePage() {
 
         {article.relatedSection === "designer" && (
           <Link
-            to="/designer"
+            to="/designer?from=article"
+            onClick={() => reachGoal("article_to_designer_click", { article: article.slug })}
             className="group flex items-center gap-4 bg-[hsl(var(--earth-ochre))]/10 border border-[hsl(var(--earth-ochre))]/40 rounded-xl p-5 hover:bg-[hsl(var(--earth-ochre))]/20 transition-all"
           >
             <div className="text-2xl shrink-0">🎨</div>
@@ -108,6 +110,7 @@ export default function ArticlePage() {
         {relatedSection && (
           <Link
             to={`/${relatedSection.id}`}
+            onClick={() => reachGoal("article_to_section_click", { article: article.slug, section: relatedSection.id })}
             className="group flex items-center gap-4 bg-[hsl(var(--earth-ochre))]/10 border border-[hsl(var(--earth-ochre))]/40 rounded-xl p-5 hover:bg-[hsl(var(--earth-ochre))]/20 transition-all"
           >
             <div className="text-2xl shrink-0">{relatedSection.emoji}</div>
@@ -121,6 +124,7 @@ export default function ArticlePage() {
 
         <Link
           to="/guides"
+          onClick={() => reachGoal("article_to_guides_click", { article: article.slug })}
           className="group flex items-center gap-4 bg-white/70 border border-[hsl(var(--earth-sand))]/60 wood-texture rounded-xl p-5 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
         >
           <div className="text-2xl shrink-0">📖</div>

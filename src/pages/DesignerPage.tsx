@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { reachGoal } from "@/lib/metrika";
 import Seo from "@/components/Seo";
@@ -42,6 +42,15 @@ interface PendingState {
 }
 
 export default function DesignerPage() {
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("from") === "article") {
+      reachGoal("designer_visit_from_article");
+      sessionStorage.setItem("designer_source", "article");
+    }
+  }, [searchParams]);
+
   const [step, setStep] = useState<Step>("upload");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
@@ -157,7 +166,10 @@ export default function DesignerPage() {
           setImagePreview(pendingState.imagePreview);
           setSelectedStyles(pendingState.selectedStyles);
           setCustomDesc(pendingState.customDesc);
-          reachGoal("designer_payment_success", { styles: pendingState.selectedStyles });
+          reachGoal("designer_payment_success", {
+            styles: pendingState.selectedStyles,
+            source: sessionStorage.getItem("designer_source") || "direct",
+          });
           generateAll(pendingState.imagePreview, pendingState.selectedStyles, pendingState.customDesc);
           return;
         }
