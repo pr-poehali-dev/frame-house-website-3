@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import Seo from "@/components/Seo";
 import Index from "./pages/Index";
 import SectionPage from "./pages/SectionPage";
 import DesignerPage from "./pages/DesignerPage";
@@ -40,7 +41,19 @@ const App = () => (
             <Route path="/guides" element={<GuidesPage />} />
             <Route path="/:sectionId" element={<SectionPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            <Route
+              path="*"
+              element={
+                <>
+                  <Seo
+                    title="Страница не найдена"
+                    description="Запрашиваемая страница не существует"
+                    noindex
+                  />
+                  <NotFound />
+                </>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
