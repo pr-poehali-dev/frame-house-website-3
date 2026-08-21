@@ -1,8 +1,10 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { articles } from "@/components/articles";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
+import YandexFeedAd from "@/components/YandexFeedAd";
 
 export default function ArticlesPage() {
   return (
@@ -47,32 +49,34 @@ export default function ArticlesPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {articles.map((a) => (
-            <Link
-              key={a.slug}
-              to={`/articles/${a.slug}`}
-              className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-2xl p-6 wood-texture hover:border-[hsl(var(--earth-ochre))] hover:shadow-lg transition-all hover:-translate-y-0.5"
-            >
-              <div className="flex items-start gap-4 mb-3">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
-                  style={{ backgroundColor: a.color + "22", border: `2px solid ${a.color}44` }}
-                >
-                  {a.emoji}
+          {articles.map((a, i) => (
+            <Fragment key={a.slug}>
+              <Link
+                to={`/articles/${a.slug}`}
+                className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-2xl p-6 wood-texture hover:border-[hsl(var(--earth-ochre))] hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                <div className="flex items-start gap-4 mb-3">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
+                    style={{ backgroundColor: a.color + "22", border: `2px solid ${a.color}44` }}
+                  >
+                    {a.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-[hsl(var(--muted-foreground))] tracking-widest uppercase mb-1">{a.readTime} чтения</div>
+                    <h2 className="font-serif text-lg font-bold text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors leading-snug">
+                      {a.title}
+                    </h2>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-[hsl(var(--muted-foreground))] tracking-widest uppercase mb-1">{a.readTime} чтения</div>
-                  <h2 className="font-serif text-lg font-bold text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors leading-snug">
-                    {a.title}
-                  </h2>
+                <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">{a.excerpt}</p>
+                <div className="mt-4 flex items-center gap-1.5 text-xs font-medium" style={{ color: a.color }}>
+                  <span>Читать статью</span>
+                  <Icon name="ArrowRight" size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-              </div>
-              <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">{a.excerpt}</p>
-              <div className="mt-4 flex items-center gap-1.5 text-xs font-medium" style={{ color: a.color }}>
-                <span>Читать статью</span>
-                <Icon name="ArrowRight" size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </Link>
+              </Link>
+              {i > 0 && (i + 1) % 6 === 0 && <YandexFeedAd />}
+            </Fragment>
           ))}
         </div>
       </main>
