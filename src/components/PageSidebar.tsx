@@ -3,6 +3,8 @@ import Icon from "@/components/ui/icon";
 import type { Section } from "@/components/sections";
 import { reachGoal } from "@/lib/metrika";
 
+const CONSULTATION_URL = "https://functions.poehali.dev/9649d88b-762c-40da-9336-b3e5260dd537";
+
 // ─── Рекламные баннеры ──────────────────────────────────────────────
 // Замените href, imageSrc и label на свои данные
 const AD_BANNERS = [
@@ -42,14 +44,29 @@ interface PageSidebarProps {
 export default function PageSidebar({ sidebar }: PageSidebarProps) {
   const [formData, setFormData] = useState({ name: "", phone: "", comment: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: подключить отправку на почту или в CRM
-    reachGoal("consultation_form_submit");
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-    setFormData({ name: "", phone: "", comment: "" });
+    setSending(true);
+    try {
+      await fetch(CONSULTATION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          comment: formData.comment,
+          page: window.location.pathname,
+        }),
+      });
+      reachGoal("consultation_form_submit");
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+      setFormData({ name: "", phone: "", comment: "" });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -150,9 +167,10 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
             />
             <button
               type="submit"
-              className="w-full bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] text-[hsl(var(--earth-deep))] font-semibold text-sm py-2.5 rounded-lg transition-all"
+              disabled={sending}
+              className="w-full bg-[hsl(var(--earth-ochre))] hover:bg-[hsl(38,65%,44%)] disabled:opacity-60 text-[hsl(var(--earth-deep))] font-semibold text-sm py-2.5 rounded-lg transition-all"
             >
-              Отправить заявку
+              {sending ? "Отправка..." : "Отправить заявку"}
             </button>
           </form>
         )}
