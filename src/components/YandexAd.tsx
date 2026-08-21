@@ -6,16 +6,22 @@ declare global {
     Ya?: {
       Context: {
         AdvManager: {
-          render: (params: { blockId: string; renderTo: string; type: string }) => void;
+          render: (params: { blockId: string; renderTo: string; type?: string }) => void;
         };
       };
     };
   }
 }
 
-export default function YandexFeedAd() {
+interface YandexAdProps {
+  blockId: string;
+  type?: string;
+  className?: string;
+}
+
+export default function YandexAd({ blockId, type, className }: YandexAdProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9]/g, "");
-  const containerId = `yandex_rtb_R-A-19523216-15-${rawId}`;
+  const containerId = `yandex_rtb_${blockId}-${rawId}`;
   const rendered = useRef(false);
 
   useEffect(() => {
@@ -25,12 +31,12 @@ export default function YandexFeedAd() {
     window.yaContextCb = window.yaContextCb || [];
     window.yaContextCb.push(() => {
       window.Ya?.Context.AdvManager.render({
-        blockId: "R-A-19523216-15",
+        blockId,
         renderTo: containerId,
-        type: "feed",
+        ...(type ? { type } : {}),
       });
     });
-  }, [containerId]);
+  }, [containerId, blockId, type]);
 
-  return <div id={containerId} className="col-span-full sm:col-span-1" />;
+  return <div id={containerId} className={className ?? "col-span-full sm:col-span-1"} />;
 }

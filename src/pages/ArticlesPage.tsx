@@ -4,7 +4,7 @@ import Icon from "@/components/ui/icon";
 import { articles } from "@/components/articles";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
-import YandexFeedAd from "@/components/YandexFeedAd";
+import YandexAd from "@/components/YandexAd";
 
 export default function ArticlesPage() {
   return (
@@ -75,7 +75,7 @@ export default function ArticlesPage() {
                   <Icon name="ArrowRight" size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </Link>
-              {i > 0 && (i + 1) % 6 === 0 && <YandexFeedAd />}
+              {i > 0 && (i + 1) % 6 === 0 && <YandexAd blockId="R-A-19523216-15" type="feed" />}
             </Fragment>
           ))}
         </div>

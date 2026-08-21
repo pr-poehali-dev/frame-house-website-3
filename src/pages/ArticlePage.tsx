@@ -6,6 +6,7 @@ import { sections } from "@/components/sections";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
 import ShareButtons from "@/components/ShareButtons";
+import YandexAd from "@/components/YandexAd";
 import { reachGoal } from "@/lib/metrika";
 
 const SITE_URL = "https://dacha365.site";
@@ -90,13 +91,20 @@ export default function ArticlePage() {
       {/* CONTENT */}
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-5">
         {article.content.map((block, bi) => (
-          <div key={bi} className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-6 wood-texture">
-            <h2 className="font-serif text-xl font-semibold mb-3" style={{ color: article.color }}>
-              {block.heading}
-            </h2>
-            <p className="text-[hsl(var(--foreground))] leading-relaxed whitespace-pre-line text-sm md:text-base">
-              {block.text}
-            </p>
+          <div key={bi}>
+            <div className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-6 wood-texture">
+              <h2 className="font-serif text-xl font-semibold mb-3" style={{ color: article.color }}>
+                {block.heading}
+              </h2>
+              <p className="text-[hsl(var(--foreground))] leading-relaxed whitespace-pre-line text-sm md:text-base">
+                {block.text}
+              </p>
+            </div>
+            {bi === 0 && article.content.length > 1 && (
+              <div className="mt-5">
+                <YandexAd blockId="R-A-19523216-16" className="w-full" />
+              </div>
+            )}
           </div>
         ))}
 

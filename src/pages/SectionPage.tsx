@@ -7,7 +7,7 @@ import Calculator from "@/components/Calculator";
 import PageSidebar from "@/components/PageSidebar";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
-import YandexFeedAd from "@/components/YandexFeedAd";
+import YandexAd from "@/components/YandexAd";
 
 export default function SectionPage() {
   const { sectionId } = useParams<{ sectionId: string }>();
@@ -204,7 +204,7 @@ export default function SectionPage() {
                     </Link>
                   ))}
                 </div>
-                {relatedArticles.length >= 4 && <YandexFeedAd />}
+                {relatedArticles.length >= 4 && <YandexAd blockId="R-A-19523216-15" type="feed" />}
                 <Link
                   to="/articles"
                   className="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-[hsl(var(--earth-brown))] hover:opacity-70 transition-opacity"
