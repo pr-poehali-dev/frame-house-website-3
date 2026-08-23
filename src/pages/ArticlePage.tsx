@@ -17,6 +17,11 @@ export default function ArticlePage() {
 
   const article = articles.find((a) => a.slug === slug);
   const relatedSection = sections.find((s) => s.id === article?.relatedSection);
+  const relatedArticles = article
+    ? articles
+        .filter((a) => a.slug !== article.slug && a.relatedSection === article.relatedSection)
+        .slice(0, 3)
+    : [];
 
   useEffect(() => {
     if (!article) navigate("/articles", { replace: true });
@@ -116,6 +121,29 @@ export default function ArticlePage() {
             source="bottom"
           />
         </div>
+
+        {relatedArticles.length > 0 && (
+          <div>
+            <h2 className="font-serif text-xl font-bold text-[hsl(var(--earth-deep))] mb-3">
+              Читайте также
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {relatedArticles.map((a) => (
+                <Link
+                  key={a.slug}
+                  to={`/articles/${a.slug}`}
+                  className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-4 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
+                >
+                  <div className="text-xl mb-2">{a.emoji}</div>
+                  <div className="text-sm font-semibold text-[hsl(var(--earth-deep))] leading-snug group-hover:text-[hsl(var(--earth-brown))] transition-colors">
+                    {a.title}
+                  </div>
+                  <div className="text-xs text-[hsl(var(--muted-foreground))] mt-1.5">{a.readTime} чтения</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {article.relatedSection === "designer" && (
           <Link
