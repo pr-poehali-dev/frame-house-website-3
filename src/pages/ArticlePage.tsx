@@ -31,6 +31,7 @@ export default function ArticlePage() {
         title={article.seoTitle}
         description={article.seoDescription}
         path={`/articles/${article.slug}`}
+        article={{ readTime: article.readTime }}
       />
 
       {/* NAV */}
