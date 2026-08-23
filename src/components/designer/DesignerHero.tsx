@@ -1,5 +1,6 @@
 import Icon from "@/components/ui/icon";
 import StyleExamples from "@/components/designer/StyleExamples";
+import DesignerReviews from "@/components/designer/DesignerReviews";
 
 interface Style {
   id: string;
@@ -109,6 +110,7 @@ export default function DesignerHero({ styles, fileRef, onDrop, onFileChange }: 
         </div>
 
         <StyleExamples />
+        <DesignerReviews />
       </div>
     </>
   );
