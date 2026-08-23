@@ -1,4 +1,5 @@
 import Icon from "@/components/ui/icon";
+import StyleExamples from "@/components/designer/StyleExamples";
 
 interface Style {
   id: string;
@@ -107,21 +108,7 @@ export default function DesignerHero({ styles, fileRef, onDrop, onFileChange }: 
           </p>
         </div>
 
-        <div className="mt-8">
-          <h3 className="font-serif text-lg font-bold text-[hsl(var(--earth-dark))] text-center mb-4">
-            Пример результата
-          </h3>
-          <div className="rounded-2xl overflow-hidden border border-[hsl(var(--earth-sand))]/50 shadow-sm bg-white/60">
-            <img
-              src="https://cdn.poehali.dev/projects/c2c6592c-528a-42df-8c08-ee1f67195614/files/83ca5248-731c-43de-b72f-983173822a82.jpg"
-              alt="Пример результата — до и после дизайна участка в английском стиле"
-              className="w-full h-auto block"
-            />
-          </div>
-          <p className="text-xs text-[hsl(var(--muted-foreground))] text-center mt-2">
-            Слева — исходное фото участка, справа — результат в стиле «Английский сад»
-          </p>
-        </div>
+        <StyleExamples />
       </div>
     </>
   );
