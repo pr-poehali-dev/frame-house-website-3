@@ -45,12 +45,14 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
   const [formData, setFormData] = useState({ name: "", phone: "", comment: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
+    setError(null);
     try {
-      await fetch(CONSULTATION_URL, {
+      const resp = await fetch(CONSULTATION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -60,10 +62,14 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
           page: window.location.pathname,
         }),
       });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || "Не удалось отправить заявку");
       reachGoal("consultation_form_submit");
       setSent(true);
       setTimeout(() => setSent(false), 4000);
       setFormData({ name: "", phone: "", comment: "" });
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Не удалось отправить заявку. Попробуйте ещё раз");
     } finally {
       setSending(false);
     }
@@ -165,6 +171,7 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
               onChange={(e) => setFormData((p) => ({ ...p, comment: e.target.value }))}
               className="w-full text-sm px-3 py-2 rounded-lg border border-[hsl(var(--earth-sand))] bg-white focus:outline-none focus:border-[hsl(var(--earth-ochre))] placeholder:text-[hsl(var(--muted-foreground))] resize-none"
             />
+            {error && <p className="text-xs text-red-500">{error}</p>}
             <button
               type="submit"
               disabled={sending}

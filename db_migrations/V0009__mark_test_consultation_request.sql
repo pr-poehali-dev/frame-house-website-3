@@ -1,0 +1,1 @@
+UPDATE consultation_requests SET status = 'test_ignore' WHERE id = 1 AND name = 'Проверка Юра';
