@@ -37,6 +37,13 @@ export default function ArticlePage() {
         description={article.seoDescription}
         path={`/articles/${article.slug}`}
         article={{ readTime: article.readTime }}
+        howTo={{
+          totalTime: article.readTime,
+          steps: article.content.map((block) => ({
+            name: block.heading,
+            text: block.text.replace(/\n+/g, " "),
+          })),
+        }}
       />
 
       {/* NAV */}
@@ -187,6 +194,13 @@ export default function ArticlePage() {
           </div>
           <Icon name="Download" size={18} className="text-[hsl(var(--earth-brown))] shrink-0" />
         </Link>
+
+        <div className="flex gap-3 bg-[hsl(var(--earth-sand))]/20 border border-[hsl(var(--earth-sand))]/40 rounded-xl p-4">
+          <Icon name="TriangleAlert" size={16} className="text-[hsl(var(--muted-foreground))] shrink-0 mt-0.5" />
+          <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+            Материал носит информационный характер и не заменяет проектную документацию. Перед началом работ проведите геологические изыскания участка и соблюдайте актуальные СП, ГОСТ и правила техники безопасности, либо привлеките лицензированных специалистов.
+          </p>
+        </div>
       </main>
 
       {/* FOOTER */}

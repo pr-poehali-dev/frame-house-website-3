@@ -6,6 +6,16 @@ interface ArticleMeta {
   readTime?: string;
 }
 
+interface HowToStep {
+  name: string;
+  text: string;
+}
+
+interface HowToMeta {
+  steps: HowToStep[];
+  totalTime?: string;
+}
+
 interface SeoProps {
   title: string;
   description: string;
@@ -13,6 +23,7 @@ interface SeoProps {
   image?: string;
   noindex?: boolean;
   article?: ArticleMeta;
+  howTo?: HowToMeta;
 }
 
 const SITE_URL = "https://dacha365.site";
@@ -39,7 +50,7 @@ const WEBSITE_JSON_LD = {
   },
 };
 
-export default function Seo({ title, description, path = "/", image = DEFAULT_OG_IMAGE, noindex = false, article }: SeoProps) {
+export default function Seo({ title, description, path = "/", image = DEFAULT_OG_IMAGE, noindex = false, article, howTo }: SeoProps) {
   const url = `${SITE_URL}${path}`;
 
   const articleJsonLd = article
@@ -54,6 +65,22 @@ export default function Seo({ title, description, path = "/", image = DEFAULT_OG
         publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: DEFAULT_OG_IMAGE } },
         ...(article.publishedTime ? { datePublished: article.publishedTime } : {}),
         ...(article.modifiedTime ? { dateModified: article.modifiedTime } : {}),
+      }
+    : null;
+
+  const howToJsonLd = howTo
+    ? {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: title,
+        description,
+        image,
+        ...(howTo.totalTime ? { totalTime: howTo.totalTime } : {}),
+        step: howTo.steps.map((s) => ({
+          "@type": "HowToStep",
+          name: s.name,
+          text: s.text,
+        })),
       }
     : null;
 
@@ -81,6 +108,9 @@ export default function Seo({ title, description, path = "/", image = DEFAULT_OG
       )}
       {articleJsonLd && (
         <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+      )}
+      {howToJsonLd && (
+        <script type="application/ld+json">{JSON.stringify(howToJsonLd)}</script>
       )}
     </Helmet>
   );

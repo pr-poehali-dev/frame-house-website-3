@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { sections, FOUNDATION_IMG } from "@/components/sections";
 import { articles } from "@/components/articles";
+import { mistakes } from "@/components/mistakes";
 import Calculator from "@/components/Calculator";
 import PageSidebar from "@/components/PageSidebar";
 import Seo from "@/components/Seo";
@@ -18,6 +19,7 @@ export default function SectionPage() {
   const prevSection = idx > 0 ? sections[idx - 1] : null;
   const nextSection = idx < sections.length - 1 ? sections[idx + 1] : null;
   const relatedArticles = articles.filter((a) => a.relatedSection === sectionId);
+  const relatedMistakes = mistakes.filter((m) => m.relatedSection === sectionId);
 
   useEffect(() => {
     if (!section) navigate("/", { replace: true });
@@ -32,6 +34,12 @@ export default function SectionPage() {
         title={section.seoTitle || `${section.title} — КаркасДом`}
         description={section.seoDescription || section.subtitle}
         path={`/${section.id}`}
+        howTo={{
+          steps: section.content.map((block) => ({
+            name: block.heading,
+            text: block.text.replace(/\n+/g, " "),
+          })),
+        }}
       />
 
       {/* NAV */}
@@ -68,6 +76,12 @@ export default function SectionPage() {
                 className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
               >
                 📖 Гайды
+              </Link>
+              <Link
+                to="/mistakes"
+                className="px-3 py-1.5 rounded text-sm font-medium text-[hsl(var(--earth-sand))] hover:text-[hsl(var(--earth-cream))] transition-all"
+              >
+                ⚠️ Ошибки
               </Link>
               <SiteSearch />
             </div>
@@ -214,6 +228,39 @@ export default function SectionPage() {
               </div>
             )}
 
+            {/* Ошибки по теме */}
+            {relatedMistakes.length > 0 && (
+              <div>
+                <h2 className="font-serif text-lg font-semibold text-[hsl(var(--earth-dark))] mb-3">
+                  ⚠️ Как не надо строить: «{section.title}»
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {relatedMistakes.map((m) => (
+                    <Link
+                      key={m.slug}
+                      to={`/mistakes/${m.slug}`}
+                      className="group bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-4 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shrink-0"
+                          style={{ backgroundColor: m.color + "22", border: `2px solid ${m.color}44` }}
+                        >
+                          {m.emoji}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-[hsl(var(--earth-deep))] group-hover:text-[hsl(var(--earth-brown))] transition-colors leading-snug">
+                            {m.title}
+                          </div>
+                          <div className="text-xs text-[hsl(var(--muted-foreground))] mt-1">{m.readTime} чтения</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Prev / Next навигация */}
             <div className="flex gap-3 pt-2">
               {prevSection ? (
@@ -245,6 +292,13 @@ export default function SectionPage() {
                   <Icon name="ChevronRight" size={18} className="text-[hsl(var(--earth-ochre))] shrink-0" />
                 </Link>
               )}
+            </div>
+
+            <div className="flex gap-3 bg-[hsl(var(--earth-sand))]/20 border border-[hsl(var(--earth-sand))]/40 rounded-xl p-4">
+              <Icon name="TriangleAlert" size={16} className="text-[hsl(var(--muted-foreground))] shrink-0 mt-0.5" />
+              <p className="text-xs text-[hsl(var(--muted-foreground))] leading-relaxed">
+                Материал носит информационный характер и не заменяет проектную документацию. Перед началом работ проведите геологические изыскания участка и соблюдайте актуальные СП, ГОСТ и правила техники безопасности, либо привлеките лицензированных специалистов.
+              </p>
             </div>
           </div>
 

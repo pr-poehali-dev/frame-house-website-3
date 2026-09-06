@@ -102,16 +102,19 @@ export const sections = [
         { label: "Периметр дома", unit: "м", min: 20, max: 120, default: 40, step: 2, key: "perimeter" },
         { label: "Высота стен", unit: "м", min: 2.5, max: 4, default: 3, step: 0.1, key: "height" },
         { label: "Толщина утеплителя", unit: "мм", min: 100, max: 250, default: 150, step: 50, key: "insulation" },
+        { label: "Кол-во окон", unit: "шт", min: 0, max: 20, default: 6, step: 1, key: "windows" },
       ],
       compute: (p: Record<string, number>) => {
         const area = p.perimeter * p.height;
-        const studs = Math.ceil((p.perimeter / 0.6) + (p.perimeter / 10) * 2);
+        const studs = Math.ceil((p.perimeter / 0.6) + (p.perimeter / 10) * 2 + p.windows * 2);
         const osb = Math.ceil(area / 2.88 * 1.1);
         const insul = Math.ceil(area * (p.insulation / 50));
+        const fasteners = Math.ceil(osb * 60 + p.windows * 40);
         return [
           { label: "Стойки 150×50 (шт)", value: studs },
           { label: "OSB-3 листов (шт)", value: osb },
           { label: "Утеплитель (пачки)", value: insul },
+          { label: "Саморезы/метизы (шт)", value: fasteners },
         ];
       },
     },
@@ -163,10 +166,12 @@ export const sections = [
         const roofArea = Math.ceil(p.length * p.width * koef * 2 * 1.1);
         const timber = Math.ceil((p.length / 0.6 * 2 + 4) * 1.05);
         const insul = Math.ceil(p.length * p.width * koef * 0.04 * 2);
+        const fasteners = Math.ceil(roofArea * 7);
         return [
           { label: "Кровля (м²)", value: roofArea },
           { label: "Стропила (шт)", value: timber },
           { label: "Утеплитель (м³)", value: insul },
+          { label: "Саморезы для кровли (шт)", value: fasteners },
         ];
       },
     },

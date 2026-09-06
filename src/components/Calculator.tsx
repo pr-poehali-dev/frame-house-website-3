@@ -44,7 +44,7 @@ export default function Calculator({ calc }: CalculatorProps) {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {results.map((r) => (
           <div key={r.label} className="bg-white/60 rounded-lg p-3 text-center border border-[hsl(var(--earth-sand))]">
             <div className="text-2xl font-bold font-serif text-[hsl(var(--earth-brown))]">{r.value}</div>
