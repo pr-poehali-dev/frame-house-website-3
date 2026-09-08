@@ -11,7 +11,7 @@ const CONSULTATION_URL = "https://functions.poehali.dev/9649d88b-762c-40da-9336-
 const AD_BANNERS = [
   {
     id: "banner1",
-    href: "#",
+    href: "https://market.yandex.ru/search?text=брус%20доска%20строительные",
     label: "Купить брус и доску",
     description: "Доставка по всей России. Скидка 10% по промокоду КАРКАС",
     bg: "from-amber-800 to-amber-600",
@@ -19,7 +19,7 @@ const AD_BANNERS = [
   },
   {
     id: "banner2",
-    href: "#",
+    href: "https://market.yandex.ru/search?text=утеплитель%20rockwool",
     label: "Утеплитель ROCKWOOL",
     description: "Официальный дилер. Оптовые цены, самовывоз и доставка",
     bg: "from-stone-700 to-stone-500",
@@ -28,14 +28,13 @@ const AD_BANNERS = [
 ];
 
 // ─── Ссылки на товары/магазины ───────────────────────────────────────
-// Замените href и label на свои ссылки
 const SHOP_LINKS = [
-  { label: "Купить цемент и бетон", href: "#", icon: "ShoppingCart" },
-  { label: "Арматура оптом", href: "#", icon: "ShoppingCart" },
-  { label: "OSB-плиты и фанера", href: "#", icon: "ShoppingCart" },
-  { label: "Металлочерепица", href: "#", icon: "ShoppingCart" },
-  { label: "Кабель и автоматы", href: "#", icon: "ShoppingCart" },
-  { label: "Трубы ПВХ и ПП", href: "#", icon: "ShoppingCart" },
+  { label: "Купить цемент и бетон", href: "https://market.yandex.ru/search?text=цемент", icon: "ShoppingCart" },
+  { label: "Арматура оптом", href: "https://market.yandex.ru/search?text=арматура%20строительная", icon: "ShoppingCart" },
+  { label: "OSB-плиты и фанера", href: "https://market.yandex.ru/search?text=osb%20плита%20фанера", icon: "ShoppingCart" },
+  { label: "Металлочерепица", href: "https://market.yandex.ru/search?text=металлочерепица", icon: "ShoppingCart" },
+  { label: "Кабель и автоматы", href: "https://market.yandex.ru/search?text=кабель%20автоматы%20электрика", icon: "ShoppingCart" },
+  { label: "Трубы ПВХ и ПП", href: "https://market.yandex.ru/search?text=трубы%20пвх%20пп", icon: "ShoppingCart" },
 ];
 
 interface PageSidebarProps {
