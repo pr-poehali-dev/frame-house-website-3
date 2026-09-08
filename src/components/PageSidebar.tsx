@@ -30,6 +30,7 @@ const AD_BANNERS = [
 // ─── Ссылки на товары/магазины ───────────────────────────────────────
 const SHOP_LINKS = [
   { label: "Максидом — стройматериалы", href: "https://uuwgc.com/g/vw6dqabpgk66633b8cd9b6a2cdd7f0/?erid=25H8d7vbP8SRTvH4HtSZJ1", icon: "ShoppingCart" },
+  { label: "AliExpress — инструменты и материалы", href: "https://rzekl.com/g/1e8d11449466633b8cd916525dc3e8/", icon: "ShoppingCart" },
   { label: "Купить цемент и бетон", href: "https://market.yandex.ru/search?text=цемент", icon: "ShoppingCart" },
   { label: "Арматура оптом", href: "https://market.yandex.ru/search?text=арматура%20строительная", icon: "ShoppingCart" },
   { label: "OSB-плиты и фанера", href: "https://market.yandex.ru/search?text=osb%20плита%20фанера", icon: "ShoppingCart" },
