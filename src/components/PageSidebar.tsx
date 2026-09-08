@@ -2,6 +2,7 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import type { Section } from "@/components/sections";
 import { reachGoal } from "@/lib/metrika";
+import AdFoxAd from "@/components/AdFoxAd";
 
 const CONSULTATION_URL = "https://functions.poehali.dev/9649d88b-762c-40da-9336-b3e5260dd537";
 
@@ -92,6 +93,15 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* AdFox: Сайдбар 240x400 */}
+      <div className="flex justify-center">
+        <AdFoxAd
+          ownerId={14667764}
+          params={{ p1: "drmln", p2: "hiut" }}
+          className="w-[240px] h-[400px]"
+        />
       </div>
 
       {/* Рекламные баннеры */}
