@@ -5,6 +5,7 @@ import { articles } from "@/components/articles";
 import Seo from "@/components/Seo";
 import SiteSearch from "@/components/SiteSearch";
 import YandexAd from "@/components/YandexAd";
+import AdFoxAd from "@/components/AdFoxAd";
 
 export default function ArticlesPage() {
   return (
@@ -76,6 +77,15 @@ export default function ArticlesPage() {
                 </div>
               </Link>
               {i > 0 && (i + 1) % 6 === 0 && <YandexAd blockId="R-A-19523216-15" type="feed" />}
+              {i > 0 && (i + 1) % 9 === 0 && (
+                <div className="col-span-full flex justify-center">
+                  <AdFoxAd
+                    ownerId={14667764}
+                    params={{ p1: "drmln", p2: "hiut" }}
+                    className="w-[240px] h-[400px]"
+                  />
+                </div>
+              )}
             </Fragment>
           ))}
         </div>
