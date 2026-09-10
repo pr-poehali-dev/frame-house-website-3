@@ -113,7 +113,7 @@ export default function ArticlePage() {
                 {block.text}
               </p>
             </div>
-            {bi === 0 && article.content.length > 1 && (
+            {bi === 0 && article.content.length > 2 && (
               <div className="mt-5">
                 <YandexAd blockId="R-A-19523216-16" className="w-full" />
               </div>
@@ -181,19 +181,6 @@ export default function ArticlePage() {
             <Icon name="ArrowRight" size={18} className="text-[hsl(var(--earth-ochre))] shrink-0" />
           </Link>
         )}
-
-        <Link
-          to="/guides"
-          onClick={() => reachGoal("article_to_guides_click", { article: article.slug })}
-          className="group flex items-center gap-4 bg-white/70 border border-[hsl(var(--earth-sand))]/60 wood-texture rounded-xl p-5 hover:border-[hsl(var(--earth-ochre))] hover:shadow-md transition-all"
-        >
-          <div className="text-2xl shrink-0">📖</div>
-          <div className="flex-1">
-            <div className="text-xs text-[hsl(var(--muted-foreground))]">Сохранить себе</div>
-            <div className="font-semibold text-[hsl(var(--earth-deep))]">Скачать PDF-гайд по этой теме</div>
-          </div>
-          <Icon name="Download" size={18} className="text-[hsl(var(--earth-brown))] shrink-0" />
-        </Link>
 
         <div className="flex gap-3 bg-[hsl(var(--earth-sand))]/20 border border-[hsl(var(--earth-sand))]/40 rounded-xl p-4">
           <Icon name="TriangleAlert" size={16} className="text-[hsl(var(--muted-foreground))] shrink-0 mt-0.5" />
