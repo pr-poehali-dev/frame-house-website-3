@@ -27,10 +27,14 @@ const AD_BANNERS = [
   },
 ];
 
+// ─── Партнёрские ссылки (выделены отдельно) ──────────────────────────
+const PARTNER_LINKS = [
+  { label: "Максидом — стройматериалы", href: "https://uuwgc.com/g/vw6dqabpgk66633b8cd9b6a2cdd7f0/?erid=25H8d7vbP8SRTvH4HtSZJ1", icon: "🏬" },
+  { label: "AliExpress — инструменты и материалы", href: "https://rzekl.com/g/1e8d11449466633b8cd916525dc3e8/", icon: "📦" },
+];
+
 // ─── Ссылки на товары/магазины ───────────────────────────────────────
 const SHOP_LINKS = [
-  { label: "Максидом — стройматериалы", href: "https://uuwgc.com/g/vw6dqabpgk66633b8cd9b6a2cdd7f0/?erid=25H8d7vbP8SRTvH4HtSZJ1", icon: "ShoppingCart" },
-  { label: "AliExpress — инструменты и материалы", href: "https://rzekl.com/g/1e8d11449466633b8cd916525dc3e8/", icon: "ShoppingCart" },
   { label: "Купить цемент и бетон", href: "https://market.yandex.ru/search?text=цемент", icon: "ShoppingCart" },
   { label: "Арматура оптом", href: "https://market.yandex.ru/search?text=арматура%20строительная", icon: "ShoppingCart" },
   { label: "OSB-плиты и фанера", href: "https://market.yandex.ru/search?text=osb%20плита%20фанера", icon: "ShoppingCart" },
@@ -124,6 +128,31 @@ export default function PageSidebar({ sidebar }: PageSidebarProps) {
           <div className="text-xs text-white/50 mt-2 text-right">реклама</div>
         </a>
       ))}
+
+      {/* Партнёрские предложения — выделены */}
+      <div className="bg-gradient-to-br from-[hsl(var(--earth-ochre))]/15 to-[hsl(var(--earth-ochre))]/5 border-2 border-[hsl(var(--earth-ochre))] rounded-xl p-4">
+        <h4 className="font-semibold text-sm text-[hsl(var(--earth-deep))] mb-3 flex items-center gap-2">
+          <Icon name="Star" size={15} className="text-[hsl(var(--earth-ochre))]" />
+          Специальные предложения
+        </h4>
+        <ul className="space-y-2">
+          {PARTNER_LINKS.map((link) => (
+            <li key={link.label}>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                className="flex items-center gap-2 text-sm font-semibold text-[hsl(var(--earth-deep))] bg-white/70 hover:bg-white rounded-lg px-3 py-2 border border-[hsl(var(--earth-ochre))]/40 hover:border-[hsl(var(--earth-ochre))] transition-all"
+              >
+                <span className="text-lg shrink-0">{link.icon}</span>
+                <span className="flex-1">{link.label}</span>
+                <Icon name="ExternalLink" size={13} className="shrink-0 text-[hsl(var(--earth-ochre))]" />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div className="text-[10px] text-[hsl(var(--muted-foreground))] mt-2 text-right">реклама</div>
+      </div>
 
       {/* Ссылки на товары */}
       <div className="bg-white/70 border border-[hsl(var(--earth-sand))]/60 rounded-xl p-4">
