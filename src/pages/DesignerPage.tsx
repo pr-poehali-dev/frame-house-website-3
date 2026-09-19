@@ -251,7 +251,7 @@ export default function DesignerPage() {
           />
           <section className="max-w-3xl mx-auto px-4 py-10 space-y-8">
             <div>
-              <h2 className="font-serif text-2xl font-bold text-[hsl(var(--earth-dark))] mb-4">
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-[hsl(var(--earth-dark))] mb-4">
                 Как работает ИИ-конструктор дизайна участка
               </h2>
               <div className="space-y-3 text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
@@ -268,7 +268,7 @@ export default function DesignerPage() {
             </div>
 
             <div>
-              <h2 className="font-serif text-2xl font-bold text-[hsl(var(--earth-dark))] mb-4">
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-[hsl(var(--earth-dark))] mb-4">
                 Частые вопросы
               </h2>
               <div className="space-y-4">

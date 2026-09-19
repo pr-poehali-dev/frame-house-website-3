@@ -42,8 +42,8 @@ export default function DesignerPayStep({
   onBack,
 }: DesignerPayStepProps) {
   return (
-    <div className="max-w-md mx-auto">
-      <div className="bg-white/80 rounded-2xl border border-[hsl(var(--earth-sand))]/60 p-6">
+    <div className="max-w-md mx-auto px-4 sm:px-0">
+      <div className="bg-white/80 rounded-2xl border border-[hsl(var(--earth-sand))]/60 p-4 sm:p-6">
         <div className="text-center mb-5">
           <div className="text-4xl mb-2">✨</div>
           <h2 className="font-serif text-xl font-bold text-[hsl(var(--earth-dark))]">

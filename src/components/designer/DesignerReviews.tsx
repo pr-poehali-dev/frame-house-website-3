@@ -84,7 +84,7 @@ export default function DesignerReviews() {
 
   return (
     <div className="mt-10">
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2 px-4 sm:px-0">
         <div>
           <h3 className="font-serif text-lg font-bold text-[hsl(var(--earth-dark))]">
             Отзывы клиентов
@@ -100,14 +100,14 @@ export default function DesignerReviews() {
         </div>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="text-xs font-medium bg-[hsl(var(--earth-brown))] text-white px-3.5 py-2 rounded-lg hover:opacity-90 transition-all"
+          className="text-xs font-medium bg-[hsl(var(--earth-brown))] text-white px-3.5 py-2 rounded-lg hover:opacity-90 transition-all shrink-0"
         >
           {showForm ? "Отменить" : "Оставить отзыв"}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white/70 border border-[hsl(var(--earth-sand))]/50 rounded-xl p-4 mb-4 space-y-3">
+        <form onSubmit={handleSubmit} className="bg-white/70 border border-[hsl(var(--earth-sand))]/50 rounded-xl p-4 mb-4 mx-4 sm:mx-0 space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-xs text-[hsl(var(--muted-foreground))]">Ваша оценка:</span>
             <div className="flex gap-0.5">
@@ -162,7 +162,7 @@ export default function DesignerReviews() {
           Отзывов пока нет — станьте первым, кто поделится впечатлением!
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 px-4 sm:px-0">
           {reviews.map((r) => (
             <div key={r.id} className="bg-white/70 border border-[hsl(var(--earth-sand))]/50 rounded-xl p-4">
               <div className="flex items-center justify-between mb-1.5">
