@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 interface ArticleMeta {
@@ -50,8 +52,29 @@ const WEBSITE_JSON_LD = {
   },
 };
 
-export default function Seo({ title, description, path = "/", image = DEFAULT_OG_IMAGE, noindex = false, article, howTo }: SeoProps) {
-  const url = `${SITE_URL}${path}`;
+export default function Seo({ title, description, path, image = DEFAULT_OG_IMAGE, noindex = false, article, howTo }: SeoProps) {
+  const { pathname } = useLocation();
+  const currentPath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : "/";
+  const url = `${SITE_URL}${currentPath}`;
+  path = currentPath;
+
+  useEffect(() => {
+    document.title = title;
+
+    let meta = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      document.head.appendChild(meta);
+    }
+    meta.content = description;
+
+    document.head.querySelectorAll('link[rel="canonical"]').forEach((el) => el.remove());
+    const link = document.createElement("link");
+    link.rel = "canonical";
+    link.href = url;
+    document.head.appendChild(link);
+  }, [title, description, url]);
 
   const articleJsonLd = article
     ? {
@@ -86,10 +109,7 @@ export default function Seo({ title, description, path = "/", image = DEFAULT_OG
 
   return (
     <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
       {noindex && <meta name="robots" content="noindex, nofollow" />}
-      <link rel="canonical" href={url} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
